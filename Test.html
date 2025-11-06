@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Clinical Messaging with Conversation Sidebar (Max 500px)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #f4f6fa;
+      --card: #ffffff;
+      --border: #e6e9ef;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --primary: #1976d2;
+      --primary-600: #125ea2;
+      --green: #2e7d32;
+      --yellow: #ffb300;
+      --chip-bg: #eef2ff;
+      --chip-text: #3730a3;
+      --open-bg: #e8f5e9;
+      --open-text: #1b5e20;
+      --closed-bg: #fff3e0;
+      --closed-text: #e65100;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background: var(--bg); color: var(--text); }
+
+    /* Constrain widget to 500px height */
+    .app {
+      display: flex;
+      height: 500px;
+      max-height: 500px;
+      width: 100%;
+      max-width: 1100px;
+      margin: 16px auto;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden; /* clip internal panels */
+      position: relative; /* for mobile pop-out + backdrop */
+    }
+
+    .sidebar {
+      width: 300px;
+      background: var(--card);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+    }
+    .sidebar-header button, .topbar button {
+      appearance: none; border: 1px solid var(--border); background: #fff; padding: 8px 10px; border-radius: 8px; cursor: pointer;
+    }
+    .sidebar-header button.primary {
+      background: var(--primary); border-color: var(--primary); color: #fff;
+    }
+    .sidebar-search { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+    .sidebar-search input {
+      width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);
+    }
+    .conv-list { overflow-y: auto; height: 100%; }
+    .conv-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 12px 14px; border-bottom: 1px solid var(--border); cursor: pointer;
+    }
+    .conv-item:hover { background: #fafbff; }
+    .conv-item.active { background: #eef6ff; }
+    .conv-title { font-weight: 600; }
+    .conv-meta { font-size: 12px; color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip { font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--chip-bg); color: var(--chip-text); }
+    .chip.open { background: var(--open-bg); color: var(--open-text); }
+    .chip.closed { background: var(--closed-bg); color: var(--closed-text); }
+    .unread-dot { width: 8px; height: 8px; border-radius: 50%; background: #ef4444; margin-top: 6px; flex: 0 0 auto; }
+    .avatar { width: 28px; height: 28px; border-radius: 50%; background: #dbeafe; display: grid; place-items: center; font-size: 14px; color: #1d4ed8; }
+
+    .main {
+      flex: 1; display: flex; flex-direction: column; height: 100%;
+    }
+    .topbar {
+      background: var(--card); border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px; padding: 10px 14px;
+    }
+    .hamburger { display: none; }
+    .title-area { font-weight: 700; flex: 1; }
+    .status-controls { display: flex; gap: 8px; align-items: center; }
+    .status-controls .btn {
+      padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-size: 14px;
+    }
+
+    .content {
+      display: flex; flex: 1; overflow: hidden; height: 100%;
+    }
+    .thread-container {
+      flex: 1; display: flex; flex-direction: column; background: var(--card); margin: 14px; border-radius: 10px; box-shadow: 0 1px 4px #0001; overflow: hidden;
+    }
+    .chat-thread { flex: 1; padding: 16px; overflow-y: auto; }
+    .message, .event { margin-bottom: 22px; display: flex; flex-direction: column; }
+    .message.patient { align-items: flex-start; }
+    .message.physician { align-items: flex-end; }
+    .bubble { max-width: 75%; padding: 10px 14px; border-radius: 16px; position: relative; font-size: 15px; }
+    .patient .bubble { background: #e3f2fd; color: #222; }
+    .physician .bubble { background: #c8e6c9; color: #222; }
+    .meta { font-size: 11px; color: #888; margin-top: 2px; display: flex; align-items: center; gap: 6px; }
+    .icon { font-size: 13px; vertical-align: middle; }
+    .activity-link, .event-link { font-size: 11px; color: var(--primary); text-decoration: underline; margin-left: 8px; }
+
+    .event { align-items: center; }
+    .event-card {
+      background: #f9fbe7; border: 1px solid #e6ee9c; border-radius: 12px; padding: 12px 16px; max-width: 85%;
+      font-size: 15px; box-shadow: 0 1px 4px #0001; display: flex; flex-direction: column; gap: 4px;
+    }
+    .event-lab { border-left: 5px solid #64b5f6; }
+    .event-xray { border-left: 5px solid #ffb74d; }
+    .event-rx { border-left: 5px solid #80cbc4; }
+    .event-title { font-weight: 700; color: #333; }
+    .event-summary { color: #444; }
+    .event-meta { font-size: 12px; color: #888; margin-top: 2px; }
+
+    .chat-compose { border-top: 1px solid var(--border); padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+    .chat-compose textarea {
+      width: 100%; min-height: 120px; max-height: 320px; resize: vertical;
+      border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 15px; line-height: 1.4; outline: none;
+    }
+    .chat-compose textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px #1976d222; }
+    .compose-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .compose-actions select {
+      border-radius: 8px; padding: 8px 10px; border: 1px solid var(--border); font-size: 14px;
+    }
+    .compose-actions .spacer { flex: 1; }
+    .compose-actions .char-count { font-size: 12px; color: var(--muted); }
+    .compose-actions button {
+      background: var(--primary); color: #fff; border: none; border-radius: 8px; padding: 10px 18px; font-size: 15px; cursor: pointer;
+    }
+    .compose-actions button:hover { background: var(--primary-600); }
+
+    /* Mobile: sidebar as pop-out within 500px widget */
+    @media (max-width: 900px) {
+      .hamburger { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; }
+      .sidebar {
+        position: absolute; top: 0; bottom: 0; left: 0; width: 84vw; max-width: 360px; z-index: 1001;
+        transform: translateX(-100%); transition: transform 0.25s ease; box-shadow: 0 6px 30px #0003;
+      }
+      .sidebar.open { transform: translateX(0); }
+      .backdrop {
+        position: absolute; inset: 0; background: #0006; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; z-index: 1000;
+      }
+      .backdrop.show { opacity: 1; pointer-events: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="Conversations">
+      <div class="sidebar-header">
+        <span>Conversations</span>
+        <button class="primary" id="newConvBtn">+ New</button>
+      </div>
+      <div class="sidebar-search">
+        <input type="search" id="convSearch" placeholder="Search conversations..." />
+      </div>
+      <div class="conv-list" id="convList" role="listbox" aria-label="Conversation list"></div>
+    </aside>
+
+    <!-- Backdrop (mobile) lives inside the 500px widget -->
+    <div class="backdrop" id="backdrop"></div>
+
+    <!-- Main content -->
+    <main class="main">
+      <div class="topbar">
+        <button class="hamburger" id="hamburger" aria-label="Open conversations">☰</button>
+        <div class="title-area" id="titleArea">Clinical Timeline</div>
+        <div class="status-controls">
+          <span id="statusChip" class="chip open">Open</span>
+          <button class="btn" id="toggleOpenBtn" title="Toggle Open/Closed">Toggle</button>
+          <button class="btn" id="markUnreadBtn" title="Mark unread">Mark Unread</button>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="thread-container">
+          <div class="chat-thread" id="chatThread"></div>
+
+          <div class="chat-compose">
+            <textarea id="composeBox" rows="5" placeholder="Type your message... Shift+Enter for newline, Enter to send."></textarea>
+            <div class="compose-actions">
+              <select id="sendType" aria-label="Delivery method">
+                <option value="auto">Automatic</option>
+                <option value="portal">Portal Message</option>
+                <option value="sms">SMS Message</option>
+                <option value="voicemail">Voicemail</option>
+                <option value="task">Task Nurse/Other</option>
+              </select>
+              <span class="char-count" id="charCount">0 chars</span>
+              <div class="spacer"></div>
+              <button id="sendBtn">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- New Conversation Modal -->
+  <dialog id="newConvDialog">
+    <form method="dialog" style="min-width: 320px; max-width: 90vw;">
+      <h3>Create Conversation</h3>
+      <label style="display:block; margin: 8px 0 4px;">Title</label>
+      <input id="newConvTitle" type="text" placeholder="e.g., General Question" style="width:100%; padding:10px; border:1px solid #e6e9ef; border-radius:8px;" />
+      <div style="display:flex; gap:8px; margin-top:12px;">
+        <button value="cancel" style="flex:1; padding:10px; border:1px solid #e6e9ef; border-radius:8px; background:#fff;">Cancel</button>
+        <button id="createConvBtn" value="default" style="flex:1; padding:10px; border:none; border-radius:8px; background:#1976d2; color:#fff;">Create</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    // Sample data model
+    const conversations = [
+      {
+        id: 'c1',
+        title: 'General Question',
+        open: true,
+        unread: true,
+        lastActivity: '2025-10-29 09:30',
+        thread: [
+          { type: 'message', role: 'patient', channel: 'sms', time: '2025-10-29 08:12', text: "Good morning, I’m still having pain in my right side." },
+          { type: 'lab', time: '2025-10-29 08:30', title: 'CBC Result', summary: 'WBC elevated (12.3), mild neutrophilia.', lastComment: 'Reviewed by Dr. Smith: Consistent with mild infection, recommend follow-up.' },
+          { type: 'message', role: 'physician', channel: 'portal', time: '2025-10-29 08:35', text: "Jane, your bloodwork shows a mild infection. I’d like to order an abdominal x-ray to check further." },
+          { type: 'imaging', time: '2025-10-29 09:10', title: 'Abdominal X-ray', interpretation: 'No acute findings. Mild constipation noted.', radiologist: 'No evidence of obstruction or free air.' },
+          { type: 'message', role: 'patient', channel: 'portal', time: '2025-10-29 09:22', text: "Thank you for letting me know. Should I change my diet or take anything for the constipation?" },
+          { type: 'message', role: 'physician', channel: 'auto', time: '2025-10-29 09:30', text: "Increase your water and fiber intake. If no improvement in 2 days, let me know." },
+          { type: 'lab', time: '2025-10-29 10:05', title: 'Urinalysis', summary: 'Trace leukocytes, otherwise unremarkable.', lastComment: 'Reviewed by Dr. Smith: No evidence of UTI.' }
+        ]
+      },
+      {
+        id: 'c2',
+        title: 'Work related illness',
+        open: true,
+        unread: false,
+        lastActivity: '2025-10-28 16:20',
+        thread: [
+          { type: 'message', role: 'patient', channel: 'portal', time: '2025-10-28 14:10', text: "I was exposed to fumes at work and now I’m coughing." },
+          { type: 'lab', time: '2025-10-28 15:05', title: 'Carboxyhemoglobin', summary: '3.2% (slightly elevated).', lastComment: 'Reviewed by NP Lee: counsel on exposure avoidance.' },
+          { type: 'imaging', time: '2025-10-28 15:40', title: 'Chest X-ray PA/LAT', interpretation: 'Mild peribronchial thickening; no consolidation.', radiologist: 'Findings may reflect bronchitis; correlate clinically.' },
+          { type: 'message', role: 'physician', channel: 'sms', time: '2025-10-28 16:20', text: "Findings suggest mild bronchitis. Rest, fluids, and use your inhaler PRN. Follow up if symptoms worsen." }
+        ]
+      },
+      {
+        id: 'c3',
+        title: 'Refill Request',
+        open: false,
+        unread: false,
+        lastActivity: '2025-10-27 11:05',
+        thread: [
+          { type: 'message', role: 'patient', channel: 'sms', time: '2025-10-27 10:02', text: "I need a refill of my lisinopril 10 mg." },
+          { type: 'event', eventType: 'rx', time: '2025-10-27 10:40', title: 'Prescription Sent', summary: 'Lisinopril 10 mg #90 with 1 refill to CVS Pharmacy.', note: 'E-prescribed by Dr. Smith.' },
+          { type: 'message', role: 'physician', channel: 'auto', time: '2025-10-27 11:05', text: "Your refill was sent to CVS. You’ll receive a confirmation soon." }
+        ]
+      },
+      {
+        id: 'c4',
+        title: 'Appointment Request',
+        open: true,
+        unread: true,
+        lastActivity: '2025-10-30 13:18',
+        thread: [
+          { type: 'message', role: 'patient', channel: 'portal', time: '2025-10-30 12:55', text: "Can I schedule a follow-up for next week?" },
+          { type: 'event', eventType: 'appt', time: '2025-10-30 13:10', title: 'Scheduling Note', summary: 'Proposed slots: Tue 10:30 AM, Thu 2:00 PM.', note: 'Coordinator will confirm.' },
+          { type: 'message', role: 'physician', channel: 'sms', time: '2025-10-30 13:18', text: "We have Tue 10:30 AM or Thu 2 PM available. Which do you prefer?" }
+        ]
+      }
+    ];
+
+    // Utilities
+    function formatTime(t) {
+      const d = new Date(t.replace(' ', 'T'));
+      return d.toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+    function channelLabel(channel) {
+      if (channel === 'portal') return 'Portal';
+      if (channel === 'sms') return 'SMS';
+      if (channel === 'voicemail') return 'Voicemail';
+      return 'Automatic';
+    }
+    function channelIcon(channel) {
+      if (channel === 'voicemail') return '🔊';
+      return '💬';
+    }
+
+    // State
+    let activeId = conversations[0]?.id || null;
+
+    // Elements
+    const convListEl = document.getElementById('convList');
+    const chatThreadEl = document.getElementById('chatThread');
+    const titleAreaEl = document.getElementById('titleArea');
+    const statusChipEl = document.getElementById('statusChip');
+    const toggleOpenBtn = document.getElementById('toggleOpenBtn');
+    const markUnreadBtn = document.getElementById('markUnreadBtn');
+    const composeBox = document.getElementById('composeBox');
+    const charCount = document.getElementById('charCount');
+    const sendTypeEl = document.getElementById('sendType');
+    const sendBtn = document.getElementById('sendBtn');
+    const newConvBtn = document.getElementById('newConvBtn');
+    const newConvDialog = document.getElementById('newConvDialog');
+    const newConvTitle = document.getElementById('newConvTitle');
+    const convSearch = document.getElementById('convSearch');
+    const sidebar = document.getElementById('sidebar');
+    const hamburger = document.getElementById('hamburger');
+    const backdrop = document.getElementById('backdrop');
+
+    function getActive() {
+      return conversations.find(c => c.id === activeId);
+    }
+
+    // Render Conversation List
+    function renderConvList() {
+      const q = (convSearch.value || '').toLowerCase();
+      convListEl.innerHTML = '';
+      conversations
+        .filter(c => !q || c.title.toLowerCase().includes(q))
+        .sort((a, b) => (a.lastActivity < b.lastActivity ? 1 : -1))
+        .forEach(c => {
+          const li = document.createElement('div');
+          li.className = 'conv-item' + (c.id === activeId ? ' active' : '');
+          li.setAttribute('role', 'option');
+          li.setAttribute('aria-selected', c.id === activeId ? 'true' : 'false');
+          li.addEventListener('click', () => selectConversation(c.id));
+
+          const avatar = document.createElement('div');
+          avatar.className = 'avatar';
+          avatar.textContent = c.title.slice(0,1).toUpperCase();
+
+          const body = document.createElement('div');
+          body.style.flex = '1';
+
+          const title = document.createElement('div');
+          title.className = 'conv-title';
+          title.textContent = c.title;
+
+          const meta = document.createElement('div');
+          meta.className = 'conv-meta';
+          const date = document.createElement('span');
+          date.textContent = formatTime(c.lastActivity);
+          const chip = document.createElement('span');
+          chip.className = 'chip ' + (c.open ? 'open' : 'closed');
+          chip.textContent = c.open ? 'Open' : 'Closed';
+
+          meta.append(date, chip);
+
+          body.append(title, meta);
+
+          li.append(avatar);
+          if (c.unread) {
+            const dot = document.createElement('div');
+            dot.className = 'unread-dot';
+            li.append(dot);
+          } else {
+            const spacer = document.createElement('div');
+            spacer.style.width = '8px';
+            spacer.style.height = '8px';
+            li.append(spacer);
+          }
+          li.append(body);
+
+          convListEl.append(li);
+        });
+    }
+
+    // Render Thread
+    function renderThread() {
+      const c = getActive();
+      if (!c) return;
+      titleAreaEl.textContent = c.title;
+      statusChipEl.textContent = c.open ? 'Open' : 'Closed';
+      statusChipEl.className = 'chip ' + (c.open ? 'open' : 'closed');
+
+      chatThreadEl.innerHTML = '';
+      c.thread
+        .slice()
+        .sort((a, b) => (a.time < b.time ? -1 : 1))
+        .forEach(item => {
+          if (item.type === 'message') {
+            const m = document.createElement('div');
+            m.className = 'message ' + (item.role === 'patient' ? 'patient' : 'physician');
+            m.innerHTML = `
+              <div class="bubble">
+                <span class="icon">${channelIcon(item.channel)}</span> ${item.text.replace(/\n/g, '<br>')}
+              </div>
+              <div class="meta">
+                ${channelLabel(item.channel)} · ${new Date(item.time.replace(' ','T')).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}
+              </div>
+            `;
+            chatThreadEl.append(m);
+          } else if (item.type === 'lab') {
+            const e = document.createElement('div');
+            e.className = 'event event-lab';
+            e.innerHTML = `
+              <div class="event-card">
+                <div class="event-title"><span class="icon">🧪</span>
+                  <a href="#lab?${encodeURIComponent(item.title)}" class="event-link"> ${item.title}</a>
+                </div>
+                <div class="event-summary">
+                  ${item.summary}<br>
+                  <em>Last comment:</em> "${item.lastComment}"
+                </div>
+                <div class="event-meta">
+                  ${new Date(item.time.replace(' ','T')).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})} · Lab result
+                </div>
+              </div>
+            `;
+            chatThreadEl.append(e);
+          } else if (item.type === 'imaging') {
+            const e = document.createElement('div');
+            e.className = 'event event-xray';
+            e.innerHTML = `
+              <div class="event-card">
+                <div class="event-title"><span class="icon">🩻</span>
+                  <a href="#imaging?${encodeURIComponent(item.title)}" class="event-link">${item.title}</a>
+                </div>
+                <div class="event-summary">
+                  <strong>Interpretation:</strong> ${item.interpretation}<br>
+                  <em>Radiologist:</em> "${item.radiologist}"
+                </div>
+                <div class="event-meta">
+                  ${new Date(item.time.replace(' ','T')).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})} · Imaging
+                </div>
+              </div>
+            `;
+            chatThreadEl.append(e);
+          } else if (item.type === 'event') {
+            const e = document.createElement('div');
+            const cls = item.eventType === 'rx' ? 'event-rx' : 'event-lab';
+            e.className = 'event ' + cls;
+            const icon = item.eventType === 'rx' ? '💊' : '🗓️';
+            const tag = item.eventType === 'rx' ? 'Prescription' : 'Event';
+            e.innerHTML = `
+              <div class="event-card">
+                <div class="event-title"><span class="icon">${icon}</span>
+                  <a href="#event?${encodeURIComponent(item.title)}" class="event-link">${item.title}</a>
+                </div>
+                <div class="event-summary">
+                  ${item.summary}${item.note ? `<br><em>${item.note}</em>` : ''}
+                </div>
+                <div class="event-meta">
+                  ${new Date(item.time.replace(' ','T')).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})} · ${tag}
+                </div>
+              </div>
+            `;
+            chatThreadEl.append(e);
+          }
+        });
+
+      // mark as read on open
+      c.unread = false;
+      renderConvList();
+      chatThreadEl.scrollTop = chatThreadEl.scrollHeight;
+    }
+
+    function selectConversation(id) {
+      activeId = id;
+      closeSidebar();
+      renderConvList();
+      renderThread();
+    }
+
+    function updateCharCount() {
+      charCount.textContent = (composeBox.value || '').length + ' chars';
+    }
+    function autoGrow(el) {
+      el.style.height = 'auto';
+      el.style.height = Math.min(el.scrollHeight, 320) + 'px';
+    }
+
+    function sendMessage() {
+      const c = getActive();
+      if (!c) return;
+      const text = (composeBox.value || '').trim();
+      if (!text) return;
+
+      let channel = sendTypeEl.value;
+      if (channel === 'auto') channel = 'auto';
+
+      const now = new Date();
+      const ts = now.toISOString().slice(0,16).replace('T',' ');
+
+      c.thread.push({ type: 'message', role: 'physician', channel, time: ts, text });
+      c.lastActivity = ts;
+      c.unread = false;
+
+      composeBox.value = '';
+      autoGrow(composeBox);
+      updateCharCount();
+
+      renderConvList();
+      renderThread();
+    }
+
+    // Open/Closed toggle
+    toggleOpenBtn.addEventListener('click', () => {
+      const c = getActive();
+      if (!c) return;
+      c.open = !c.open;
+      statusChipEl.textContent = c.open ? 'Open' : 'Closed';
+      statusChipEl.className = 'chip ' + (c.open ? 'open' : 'closed');
+      renderConvList();
+    });
+
+    // Mark unread
+    markUnreadBtn.addEventListener('click', () => {
+      const c = getActive();
+      if (!c) return;
+      c.unread = true;
+      renderConvList();
+    });
+
+    // Compose
+    composeBox.addEventListener('input', () => { autoGrow(composeBox); updateCharCount(); });
+    composeBox.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+    sendBtn.addEventListener('click', sendMessage);
+
+    // New Conversation
+    document.getElementById('newConvBtn').addEventListener('click', () => {
+      newConvTitle.value = '';
+      if (typeof newConvDialog.showModal === 'function') {
+        newConvDialog.showModal();
+      } else {
+        const title = prompt('Conversation title:') || '';
+        createConversation((title || '').trim() || 'New Conversation');
+      }
+    });
+    document.getElementById('createConvBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      const title = (newConvTitle.value || '').trim() || 'New Conversation';
+      newConvDialog.close();
+      createConversation(title);
+    });
+
+    function createConversation(title) {
+      const now = new Date().toISOString().slice(0,16).replace('T',' ');
+      const id = 'c' + Math.random().toString(36).slice(2,8);
+      conversations.unshift({
+        id, title, open: true, unread: false, lastActivity: now,
+        thread: [
+          { type: 'event', eventType: 'appt', time: now, title: 'Conversation Created', summary: 'New conversation initialized.', note: '' }
+        ]
+      });
+      selectConversation(id);
+    }
+
+    // Search
+    convSearch.addEventListener('input', renderConvList);
+
+    // Sidebar mobile controls (within 500px widget)
+    function openSidebar() {
+      sidebar.classList.add('open');
+      backdrop.classList.add('show');
+    }
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      backdrop.classList.remove('show');
+    }
+    hamburger.addEventListener('click', openSidebar);
+    backdrop.addEventListener('click', closeSidebar);
+
+    // Initial render
+    renderConvList();
+    renderThread();
+    autoGrow(composeBox);
+    updateCharCount();
+  </script>
+</body>
+</html>

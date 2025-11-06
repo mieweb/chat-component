@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Clinical Messaging with Conversation Sidebar (Max 500px)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app" id="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="Conversations">
+      <div class="sidebar-header">
+        <span>Conversations</span>
+        <button class="primary" id="newConvBtn">+ New</button>
+      </div>
+      <div class="sidebar-search">
+        <input type="search" id="convSearch" placeholder="Search conversations..." />
+      </div>
+      <div class="conv-list" id="convList" role="listbox" aria-label="Conversation list"></div>
+    </aside>
+
+    <!-- Backdrop (mobile) lives inside the 500px widget -->
+    <div class="backdrop" id="backdrop"></div>
+
+    <!-- Main content -->
+    <main class="main">
+      <div class="topbar">
+        <button class="hamburger" id="hamburger" aria-label="Open conversations">☰</button>
+        <div class="title-area" id="titleArea">Clinical Timeline</div>
+        <div class="status-controls">
+          <span id="statusChip" class="chip open">Open</span>
+          <button class="btn" id="toggleOpenBtn" title="Toggle Open/Closed">Toggle</button>
+          <button class="btn" id="markUnreadBtn" title="Mark unread">Mark Unread</button>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="thread-container">
+          <div class="chat-thread" id="chatThread"></div>
+
+          <div class="chat-compose">
+            <textarea id="composeBox" rows="5" placeholder="Type your message... Shift+Enter for newline, Enter to send."></textarea>
+            <div class="compose-actions">
+              <select id="sendType" aria-label="Delivery method">
+                <option value="auto">Automatic</option>
+                <option value="portal">Portal Message</option>
+                <option value="sms">SMS Message</option>
+                <option value="voicemail">Voicemail</option>
+                <option value="task">Task Nurse/Other</option>
+              </select>
+              <span class="char-count" id="charCount">0 chars</span>
+              <div class="spacer"></div>
+              <button id="sendBtn">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- New Conversation Modal -->
+  <dialog id="newConvDialog">
+    <form method="dialog">
+      <h3>Create Conversation</h3>
+      <label>Title</label>
+      <input id="newConvTitle" type="text" placeholder="e.g., General Question" />
+      <div class="dialog-buttons">
+        <button value="cancel">Cancel</button>
+        <button id="createConvBtn" value="default">Create</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="script.js"></script>
+</body>
+</html>
