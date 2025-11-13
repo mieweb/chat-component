@@ -1,0 +1,119 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import ChatComponent, { useChatStore } from '../src/index';
+
+function DemoApp() {
+  const exportState = useChatStore(state => state.exportState);
+  const loadConversations = useChatStore(state => state.loadConversations);
+
+  const handleMessageSent = (data) => {
+    console.log('New message sent:', data);
+  };
+
+  const handleExport = () => {
+    const state = exportState();
+    console.log('Exported state:', state);
+    alert('State exported to console. Check the browser console for details.');
+  };
+
+  const handleLoadCustomData = () => {
+    const customData = {
+      conversations: [
+        {
+          id: 'custom1',
+          title: 'Custom Conversation',
+          open: true,
+          unread: false,
+          lastActivity: new Date().toISOString().slice(0, 16).replace('T', ' '),
+          thread: [
+            {
+              type: 'message',
+              role: 'patient',
+              channel: 'portal',
+              time: new Date().toISOString().slice(0, 16).replace('T', ' '),
+              text: 'This is a custom loaded conversation!'
+            }
+          ]
+        }
+      ],
+      activeConversationId: 'custom1'
+    };
+    loadConversations(customData);
+  };
+
+  return (
+    <div className="container-fluid py-4">
+      <div className="row">
+        <div className="col-12">
+          <h1 className="mb-3">Chat Component Demo - Bootstrap Environment</h1>
+          <p className="lead">This demo shows the chat component embedded in a Bootstrap page without style conflicts.</p>
+          
+          <div className="alert alert-info" role="alert">
+            <strong>Note:</strong> The chat component uses Tailwind CSS with the 'tw-' prefix to avoid conflicts with Bootstrap classes.
+          </div>
+
+          <div className="mb-3">
+            <button 
+              className="btn btn-primary me-2"
+              onClick={handleExport}
+            >
+              Export State
+            </button>
+            <button 
+              className="btn btn-secondary"
+              onClick={handleLoadCustomData}
+            >
+              Load Custom Data
+            </button>
+          </div>
+
+          {/* Bootstrap Card containing the Chat Component */}
+          <div className="card">
+            <div className="card-body">
+              <h5 className="card-title">Chat Interface</h5>
+              <ChatComponent 
+                onMessageSent={handleMessageSent}
+                height="500px"
+                maxWidth="100%"
+              />
+            </div>
+          </div>
+
+          <div className="row mt-4">
+            <div className="col-md-6">
+              <div className="card">
+                <div className="card-body">
+                  <h5 className="card-title">Component Features</h5>
+                  <ul className="list-group list-group-flush">
+                    <li className="list-group-item">State managed with Zustand</li>
+                    <li className="list-group-item">Styled with Tailwind CSS (prefixed)</li>
+                    <li className="list-group-item">Bootstrap-compatible</li>
+                    <li className="list-group-item">Message callbacks</li>
+                    <li className="list-group-item">State export/import</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-6">
+              <div className="card">
+                <div className="card-body">
+                  <h5 className="card-title">Usage</h5>
+                  <p className="card-text">
+                    The component can be embedded in any Bootstrap window or modal without causing style conflicts.
+                    All Tailwind classes are prefixed with 'tw-' and Tailwind's base styles are disabled.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <DemoApp />
+  </React.StrictMode>
+);

@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Component-scoped custom properties (using CSS variables) */
+.chat-component-root {
+  --chat-bg: #f4f6fa;
+  --chat-card: #ffffff;
+  --chat-border: #e6e9ef;
+  --chat-text: #1f2937;
+  --chat-muted: #6b7280;
+  --chat-primary: #1976d2;
+  --chat-primary-600: #125ea2;
+  --chat-green: #2e7d32;
+  --chat-yellow: #ffb300;
+  --chat-chip-bg: #eef2ff;
+  --chat-chip-text: #3730a3;
+  --chat-open-bg: #e8f5e9;
+  --chat-open-text: #1b5e20;
+  --chat-closed-bg: #fff3e0;
+  --chat-closed-text: #e65100;
+}
