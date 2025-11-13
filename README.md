@@ -14,6 +14,12 @@ A React chat component with Tailwind CSS styling and Zustand state management, d
 - **Multi-conversation Support**: Manage multiple conversation threads
 - **Rich Message Types**: Support for messages, lab results, imaging reports, and events
 
+## Documentation
+
+- **[Embedding Guide](EMBEDDING.md)** - Complete guide for embedding the component in HTML pages
+- **[API Reference](#api-reference)** - Component props and store methods
+- **[Examples](#examples)** - Usage examples for different frameworks
+
 ## Installation
 
 ```bash
@@ -22,7 +28,7 @@ npm install @mieweb/chat-component
 
 ## Quick Start
 
-### Basic Usage
+### React Application
 
 ```jsx
 import ChatComponent from '@mieweb/chat-component';
@@ -42,6 +48,17 @@ function App() {
   );
 }
 ```
+
+### Plain HTML Page
+
+For embedding in plain HTML pages without a build system, see the **[Embedding Guide](EMBEDDING.md)** for complete instructions including:
+- Loading dependencies
+- Initializing the component
+- Loading conversations from your API
+- Receiving messages from WebSocket/polling
+- Sending messages to your backend
+
+## Examples
 
 ### Usage in Bootstrap Page
 
@@ -85,13 +102,13 @@ function TailwindPage() {
 }
 ```
 
-## Props
+## API Reference
+
+### Component Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `initialData` | `Object` | `null` | Initial conversation data to load |
 | `onMessageSent` | `Function` | `null` | Callback when a new message is sent |
-| `className` | `String` | `''` | Additional CSS classes for the root element |
 | `height` | `String` | `'500px'` | Height of the chat component |
 | `maxWidth` | `String` | `'1100px'` | Maximum width of the chat component |
 
@@ -114,7 +131,9 @@ The `onMessageSent` callback receives an object with:
 
 ## State Management
 
-The component uses Zustand for state management. You can access the store directly:
+The component uses Zustand for state management. You can access the store to programmatically control the component and react to changes.
+
+### Accessing the Store
 
 ```jsx
 import { useChatStore } from '@mieweb/chat-component';
@@ -122,20 +141,26 @@ import { useChatStore } from '@mieweb/chat-component';
 function MyComponent() {
   const exportState = useChatStore(state => state.exportState);
   const loadConversations = useChatStore(state => state.loadConversations);
+  const addMessage = useChatStore(state => state.addMessage);
 
-  const handleExport = () => {
-    const state = exportState();
-    console.log('Current state:', state);
-    // Save to localStorage, send to server, etc.
+  // Load conversations from your API
+  const loadData = async () => {
+    const response = await fetch('/api/conversations');
+    const data = await response.json();
+    loadConversations(data);
   };
 
-  const handleLoad = (savedState) => {
-    loadConversations(savedState);
+  // Inject an incoming message (e.g., from WebSocket)
+  const handleIncomingMessage = (message) => {
+    addMessage({
+      text: message.text,
+      channel: message.channel || 'auto',
+    });
   };
 
   return (
     <div>
-      <button onClick={handleExport}>Export</button>
+      <button onClick={loadData}>Load Data</button>
       {/* ... */}
     </div>
   );
@@ -155,6 +180,8 @@ function MyComponent() {
 - `toggleSidebar()`: Toggle the sidebar (mobile)
 - `loadConversations(data)`: Load conversation data
 - `exportState()`: Export current state
+
+For detailed examples of receiving and sending messages, see **[EMBEDDING.md](EMBEDDING.md)**.
 
 ## Data Format
 

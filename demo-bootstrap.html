@@ -8,9 +8,144 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-  <div id="root"></div>
+  <div class="bg-success text-white text-center py-2">
+    <a href="index.html" class="text-white text-decoration-none fw-bold">
+      ← Back to Demo Menu
+    </a>
+  </div>
+  <div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12">
+        <h1 class="mb-3">Chat Component Demo - Bootstrap Environment</h1>
+        <p class="lead">This demo shows the chat component embedded in a Bootstrap page without style conflicts.</p>
+        
+        <div class="alert alert-info" role="alert">
+          <strong>Note:</strong> The chat component uses Tailwind CSS with the 'tw-' prefix to avoid conflicts with Bootstrap classes.
+        </div>
+
+        <div class="mb-3">
+          <button class="btn btn-primary me-2" id="exportBtn">
+            Export State
+          </button>
+          <button class="btn btn-secondary" id="loadCustomBtn">
+            Load Custom Data
+          </button>
+        </div>
+
+        <!-- Bootstrap Card containing the Chat Component -->
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Chat Interface</h5>
+            <div id="chat-container"></div>
+          </div>
+        </div>
+
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Component Features</h5>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">State managed with Zustand</li>
+                  <li class="list-group-item">Styled with Tailwind CSS (prefixed)</li>
+                  <li class="list-group-item">Bootstrap-compatible</li>
+                  <li class="list-group-item">Message callbacks</li>
+                  <li class="list-group-item">State export/import</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Usage Example</h5>
+                <p class="card-text">
+                  The component can be embedded in any Bootstrap window or modal without causing style conflicts.
+                  All Tailwind classes are prefixed with 'tw-' and Tailwind's base styles are disabled.
+                </p>
+                <pre class="bg-light p-3 rounded"><code>&lt;div id="chat-container"&gt;&lt;/div&gt;
+&lt;script&gt;
+  // Initialize component
+  const root = ReactDOM.createRoot(
+    document.getElementById('chat-container')
+  );
+  root.render(
+    React.createElement(ChatComponent, {
+      onMessageSent: handleMessageSent,
+      height: '500px'
+    })
+  );
+&lt;/script&gt;</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script type="module" src="/demo/demo-bootstrap.jsx"></script>
+  
+  <!-- React, ReactDOM, and Component (in production, use the bundle) -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.min.js"></script>
+  
+  <!-- For dev, load via Vite module -->
+  <script type="module">
+    import ChatComponent from '/src/index.jsx';
+    import useChatStore from '/src/store.js';
+    
+    // Initialize the chat component
+    const root = ReactDOM.createRoot(document.getElementById('chat-container'));
+    
+    root.render(
+      React.createElement(ChatComponent, {
+        onMessageSent: handleMessageSent,
+        height: '500px',
+        maxWidth: '100%'
+      })
+    );
+    
+    // Handle messages sent from the component
+    function handleMessageSent(data) {
+      console.log('New message sent:', data);
+      // In a real application, send to your backend API
+    }
+    
+    // Export button handler
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      const state = useChatStore.getState().exportState();
+      console.log('Exported state:', state);
+      alert('State exported to console. Check the browser console for details.');
+    });
+    
+    // Load custom data button handler
+    document.getElementById('loadCustomBtn').addEventListener('click', () => {
+      const customData = {
+        conversations: [
+          {
+            id: 'custom1',
+            title: 'Custom Conversation',
+            open: true,
+            unread: false,
+            lastActivity: new Date().toISOString().slice(0, 16).replace('T', ' '),
+            thread: [
+              {
+                type: 'message',
+                role: 'patient',
+                channel: 'portal',
+                time: new Date().toISOString().slice(0, 16).replace('T', ' '),
+                text: 'This is a custom loaded conversation!'
+              }
+            ]
+          }
+        ],
+        activeConversationId: 'custom1'
+      };
+      
+      useChatStore.getState().loadConversations(customData);
+    });
+  </script>
 </body>
 </html>
