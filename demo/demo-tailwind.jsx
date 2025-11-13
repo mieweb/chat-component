@@ -5,22 +5,8 @@ import useChatStore from '../src/store';
 
 function DemoApp() {
   const [simulatorMode, setSimulatorMode] = useState(false);
-  const [pendingMessage2, setPendingMessage2] = useState(null);
   
-  const store1 = useChatStore();
   const exportState = useChatStore(state => state.exportState);
-
-  // Inject incoming messages from component 2
-  useEffect(() => {
-    if (pendingMessage2) {
-      const addMessage = useChatStore.getState().addMessage;
-      addMessage({
-        text: `[From Patient] ${pendingMessage2.text}`,
-        channel: pendingMessage2.channel,
-      });
-      setPendingMessage2(null);
-    }
-  }, [pendingMessage2]);
 
   const handleMessageSent1 = (data) => {
     console.log('Component 1 (Physician) - Message sent:', data);
@@ -28,13 +14,6 @@ function DemoApp() {
 
   const handleMessageSent2 = (data) => {
     console.log('Component 2 (Patient) - Message sent:', data);
-    
-    if (simulatorMode) {
-      // Send message back to component 1
-      setTimeout(() => {
-        setPendingMessage2(data);
-      }, 500);
-    }
   };
 
   const handleExport = () => {
@@ -108,9 +87,9 @@ function DemoApp() {
         }}>
           <strong>🔄 Simulator Mode Active</strong>
           <p style={{ margin: '5px 0 0 0', fontSize: '14px' }}>
-            Both components share the same conversation state. Send messages from Component 2 (patient view) 
-            and they will appear in Component 1 prefixed with "[From Patient]". This simulates external messages 
-            coming into the component.
+            Both components share the same conversation state. Messages from each component will appear 
+            with proper alignment based on the sender's ID. This simulates a two-way conversation 
+            between internal users (clinicians) and external users (patients/family).
           </p>
         </div>
       )}
@@ -133,13 +112,14 @@ function DemoApp() {
               color: '#1976d2',
               fontSize: '18px'
             }}>
-              📋 Component 1 - Main View (Physician)
+              📋 Component 1 - Internal User (Clinician)
             </h3>
           )}
           <ChatComponent 
             onMessageSent={handleMessageSent1}
             height="500px"
             maxWidth="100%"
+            currentUserId="physician-smith"
           />
         </div>
         
@@ -155,12 +135,13 @@ function DemoApp() {
               color: '#04a454',
               fontSize: '18px'
             }}>
-              👤 Component 2 - Patient Simulator
+              👤 Component 2 - External User (Patient)
             </h3>
             <ChatComponent 
               onMessageSent={handleMessageSent2}
               height="500px"
               maxWidth="100%"
+              currentUserId="patient-jane"
             />
             <div style={{
               marginTop: '10px',
@@ -170,7 +151,7 @@ function DemoApp() {
               fontSize: '13px',
               color: '#666'
             }}>
-              💡 Tip: Send a message here to simulate an external patient response
+              💡 Tip: Send a message here to simulate an external user response
             </div>
           </div>
         )}

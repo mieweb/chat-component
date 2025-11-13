@@ -1,23 +1,24 @@
 import React, { useEffect, useRef } from 'react';
 import useChatStore, { channelIcon, channelLabel } from '../store';
 
-const MessageItem = ({ item }) => {
+const MessageItem = ({ item, currentUserId }) => {
   const time = new Date(item.time.replace(' ', 'T')).toLocaleTimeString([], {
     hour: '2-digit',
     minute: '2-digit'
   });
 
   if (item.type === 'message') {
-    const isPatient = item.role === 'patient';
+    // Message is on the right if current user sent it
+    const isCurrentUser = item.senderId === currentUserId;
     return (
       <div 
         className={`tw-mb-5 tw-flex tw-flex-col ${
-          isPatient ? 'tw-items-start' : 'tw-items-end'
+          isCurrentUser ? 'tw-items-end' : 'tw-items-start'
         }`}
       >
         <div 
           className={`tw-max-w-[75%] tw-px-3.5 tw-py-2.5 tw-rounded-2xl tw-text-[15px] ${
-            isPatient ? 'tw-bg-[#e3f2fd]' : 'tw-bg-[#c8e6c9]'
+            isCurrentUser ? 'tw-bg-[#c8e6c9]' : 'tw-bg-[#e3f2fd]'
           } tw-text-[#222]`}
         >
           <span className="tw-text-sm tw-align-middle">{channelIcon(item.channel)}</span> 
@@ -132,7 +133,7 @@ const MessageItem = ({ item }) => {
   return null;
 };
 
-const MessageThread = () => {
+const MessageThread = ({ currentUserId = null }) => {
   const activeConversation = useChatStore(state => state.getActiveConversation());
   const threadRef = useRef(null);
 
@@ -161,7 +162,7 @@ const MessageThread = () => {
       className="tw-flex-1 tw-p-4 tw-overflow-y-auto"
     >
       {sortedThread.map((item, index) => (
-        <MessageItem key={index} item={item} />
+        <MessageItem key={index} item={item} currentUserId={currentUserId} />
       ))}
     </div>
   );

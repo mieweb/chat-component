@@ -11,7 +11,8 @@ const ChatComponent = ({
   onMessageSent = null,
   className = '',
   height = '500px',
-  maxWidth = '1100px'
+  maxWidth = '1100px',
+  currentUserId = null // Identifier for the current user viewing this component
 }) => {
   const sidebarOpen = useChatStore(state => state.sidebarOpen);
   const setSidebarOpen = useChatStore(state => state.setSidebarOpen);
@@ -70,8 +71,8 @@ const ChatComponent = ({
         
         <div className="tw-flex tw-flex-1 tw-overflow-hidden tw-h-full">
           <div className="tw-flex tw-flex-col tw-flex-1 tw-bg-white tw-m-3.5 tw-rounded-lg tw-shadow-sm tw-overflow-hidden">
-            <MessageThread />
-            <ComposeArea onMessageSent={onMessageSent} />
+            <MessageThread currentUserId={currentUserId} />
+            <ComposeArea onMessageSent={onMessageSent} currentUserId={currentUserId} />
           </div>
         </div>
       </main>

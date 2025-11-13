@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import useChatStore from '../store';
 
-const ComposeArea = ({ onMessageSent }) => {
+const ComposeArea = ({ onMessageSent, currentUserId = null }) => {
   const [text, setText] = useState('');
   const [sendType, setSendType] = useState('auto');
   const textareaRef = useRef(null);
@@ -24,6 +24,7 @@ const ComposeArea = ({ onMessageSent }) => {
     const message = {
       text: text.trim(),
       channel: sendType,
+      senderId: currentUserId, // Include sender ID if provided
     };
 
     const newMessage = addMessage(message);
