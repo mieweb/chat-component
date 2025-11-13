@@ -87,25 +87,15 @@
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   
-  <!-- React, ReactDOM, and Component (in production, use the bundle) -->
-  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.min.js"></script>
+  <!-- Chat Component CSS -->
+  <link rel="stylesheet" href="./dist/chat-component.css">
   
-  <!-- For dev, load via Vite module -->
-  <script type="module">
-    import ChatComponent from '/src/index.jsx';
-    import useChatStore from '/src/store.js';
-    
-    // Initialize the chat component
-    const root = ReactDOM.createRoot(document.getElementById('chat-container'));
-    
-    root.render(
-      React.createElement(ChatComponent, {
-        onMessageSent: handleMessageSent,
-        height: '500px',
-        maxWidth: '100%'
-      })
-    );
+  <!-- Chat Component UMD Bundle (includes React 19) -->
+  <script src="./dist/chat-component.umd.js"></script>
+  
+  <script>
+    console.log('ChatComponent:', ChatComponent);
+    console.log('ChatComponent keys:', Object.keys(ChatComponent));
     
     // Handle messages sent from the component
     function handleMessageSent(data) {
@@ -113,9 +103,24 @@
       // In a real application, send to your backend API
     }
     
+    // Initialize the chat component using bundled React and ReactDOM
+    const { React, ReactDOM } = ChatComponent;
+    console.log('React:', React);
+    console.log('ReactDOM:', ReactDOM);
+    
+    const root = ReactDOM.createRoot(document.getElementById('chat-container'));
+    
+    root.render(
+      React.createElement(ChatComponent.default, {
+        onMessageSent: handleMessageSent,
+        height: '500px',
+        maxWidth: '100%'
+      })
+    );
+    
     // Export button handler
     document.getElementById('exportBtn').addEventListener('click', () => {
-      const state = useChatStore.getState().exportState();
+      const state = ChatComponent.useChatStore.getState().exportState();
       console.log('Exported state:', state);
       alert('State exported to console. Check the browser console for details.');
     });
@@ -144,7 +149,7 @@
         activeConversationId: 'custom1'
       };
       
-      useChatStore.getState().loadConversations(customData);
+      ChatComponent.useChatStore.getState().loadConversations(customData);
     });
   </script>
 </body>

@@ -4,6 +4,7 @@ A React chat component with Tailwind CSS styling and Zustand state management, d
 
 ## Features
 
+- **Self-Contained Bundle**: Includes React 19 - no external dependencies needed
 - **React-based**: Modern React component architecture
 - **Tailwind CSS**: Styled with Tailwind CSS with `tw-` prefix for encapsulation
 - **Zustand State Management**: Efficient in-memory state management
@@ -13,6 +14,10 @@ A React chat component with Tailwind CSS styling and Zustand state management, d
 - **Responsive Design**: Mobile-friendly with collapsible sidebar
 - **Multi-conversation Support**: Manage multiple conversation threads
 - **Rich Message Types**: Support for messages, lab results, imaging reports, and events
+
+## Project Structure
+
+- **`src/chat-component-embed.jsx`** - Entry point for building the embeddable bundle. This file defines what gets exported when the component is built into `dist/chat-component.umd.js`. It bundles React 19, ReactDOM, the ChatComponent, and the Zustand store together for self-contained distribution.
 
 ## Documentation
 
