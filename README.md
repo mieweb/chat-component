@@ -1,5 +1,8 @@
 # Chat Component
 
+Video demo: https://youtube.com/shorts/oBetyZPDVvg
+
+
 A React chat component with Tailwind CSS styling and Zustand state management, designed to be embeddable in both Bootstrap and Tailwind environments without style conflicts.
 
 ## Features
