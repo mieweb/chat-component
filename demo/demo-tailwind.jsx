@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import ChatComponent from '../src/index';
+import ChatComponent from '../src/chat-component-embed';
 import useChatStore from '../src/store';
 
 function DemoApp() {
