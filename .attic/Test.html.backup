@@ -157,6 +157,11 @@
   </style>
 </head>
 <body>
+  <div style="padding: 1rem; background: #04a454; color: white; text-align: center;">
+    <a href="index.html" style="color: white; text-decoration: none; font-weight: 600;">
+      ← Back to Demo Menu
+    </a>
+  </div>
   <div class="app" id="app">
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar" aria-label="Conversations">

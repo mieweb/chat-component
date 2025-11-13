@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import ChatComponent, { useChatStore } from '../src/index';
+import ChatComponent from '../src/index';
+import useChatStore from '../src/store';
 
 function DemoApp() {
   const exportState = useChatStore(state => state.exportState);
@@ -8,6 +9,7 @@ function DemoApp() {
 
   const handleMessageSent = (data) => {
     console.log('New message sent:', data);
+    // In a real application, send to your backend API
   };
 
   const handleExport = () => {
@@ -97,7 +99,7 @@ function DemoApp() {
             <div className="col-md-6">
               <div className="card">
                 <div className="card-body">
-                  <h5 className="card-title">Usage</h5>
+                  <h5 className="card-title">Usage Example</h5>
                   <p className="card-text">
                     The component can be embedded in any Bootstrap window or modal without causing style conflicts.
                     All Tailwind classes are prefixed with 'tw-' and Tailwind's base styles are disabled.
