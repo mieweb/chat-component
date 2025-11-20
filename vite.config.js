@@ -15,9 +15,10 @@ export default defineConfig({
       fileName: (format) => `chat-component.${format}.js`,
     },
     rollupOptions: {
-      // Bundle React 19 directly with the component for self-contained distribution
-      // This creates a larger bundle (~600KB) but eliminates external dependencies
-      external: [],
+      // Force Rollup to include all imports in the bundle so the UMD is self-contained.
+      // Returning false for every id means nothing is treated as external.
+      // NOTE: this will include React/ReactDOM in the final UMD build.
+      external: (id) => false,
       output: {
         exports: 'named',
         globals: {},
