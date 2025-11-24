@@ -18,6 +18,13 @@ const ComposeArea = ({ onMessageSent, currentUserId = null }) => {
     }
   }, [text]);
 
+  // Set initial height on mount
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
+  }, []);
+
   const handleSend = () => {
     if (!activeConversation || !text.trim()) return;
 
@@ -54,13 +61,13 @@ const ComposeArea = ({ onMessageSent, currentUserId = null }) => {
     >
       <textarea
         ref={textareaRef}
-        className="tw-w-full tw-min-h-[120px] tw-max-h-[320px] tw-resize-y tw-border tw-rounded-lg tw-px-3 tw-py-2.5 tw-text-[15px] tw-leading-[1.4] tw-outline-none focus:tw-border-[var(--chat-primary)] focus:tw-shadow-[0_0_0_2px_rgba(25,118,210,0.13)]"
+        className="tw-w-full tw-max-h-[320px] tw-resize-none tw-border tw-rounded-lg tw-px-3 tw-py-2.5 tw-text-[15px] tw-leading-[1.4] tw-outline-none focus:tw-border-[var(--chat-primary)] focus:tw-shadow-[0_0_0_2px_rgba(25,118,210,0.13)] tw-overflow-y-auto"
         style={{ borderColor: 'var(--chat-border)' }}
         placeholder="Type your message... Shift+Enter for newline, Enter to send."
         value={text}
         onChange={(e) => setText(e.target.value)}
         onKeyDown={handleKeyDown}
-        rows={5}
+        rows={1}
       />
       
       <div className="tw-flex tw-items-center tw-gap-2.5 tw-flex-wrap">

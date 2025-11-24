@@ -17,6 +17,15 @@ const ChatComponent = ({
   const sidebarOpen = useChatStore(state => state.sidebarOpen);
   const setSidebarOpen = useChatStore(state => state.setSidebarOpen);
   const loadConversations = useChatStore(state => state.loadConversations);
+  const setCurrentUserId = useChatStore(state => state.setCurrentUserId);
+  const storedCurrentUserId = useChatStore(state => state.currentUserId);
+
+  // Sync currentUserId prop with store
+  React.useEffect(() => {
+    if (currentUserId !== storedCurrentUserId) {
+      setCurrentUserId(currentUserId);
+    }
+  }, [currentUserId, storedCurrentUserId, setCurrentUserId]);
 
   // Load initial data if provided
   React.useEffect(() => {
@@ -71,8 +80,8 @@ const ChatComponent = ({
         
         <div className="tw-flex tw-flex-1 tw-overflow-hidden tw-h-full">
           <div className="tw-flex tw-flex-col tw-flex-1 tw-bg-white tw-m-3.5 tw-rounded-lg tw-shadow-sm tw-overflow-hidden">
-            <MessageThread currentUserId={currentUserId} />
-            <ComposeArea onMessageSent={onMessageSent} currentUserId={currentUserId} />
+            <MessageThread currentUserId={storedCurrentUserId} />
+            <ComposeArea onMessageSent={onMessageSent} currentUserId={storedCurrentUserId} />
           </div>
         </div>
       </main>

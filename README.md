@@ -116,9 +116,12 @@ function TailwindPage() {
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
+| `initialData` | `Object` | `null` | Initial conversation data to load |
 | `onMessageSent` | `Function` | `null` | Callback when a new message is sent |
+| `className` | `String` | `''` | Additional CSS classes for the root element |
 | `height` | `String` | `'500px'` | Height of the chat component |
 | `maxWidth` | `String` | `'1100px'` | Maximum width of the chat component |
+| `currentUserId` | `Number` | `null` | Integer ID of the current user viewing the component |
 
 ### onMessageSent Callback
 
@@ -126,7 +129,7 @@ The `onMessageSent` callback receives an object with:
 
 ```javascript
 {
-  conversationId: 'c1',
+  conversationId: 735,
   message: {
     type: 'message',
     role: 'physician',
@@ -197,7 +200,7 @@ For detailed examples of receiving and sending messages, see **[EMBEDDING.md](EM
 
 ```javascript
 {
-  id: 'c1',
+  id: 735,
   title: 'General Question',
   open: true,
   unread: false,
@@ -216,6 +219,7 @@ For detailed examples of receiving and sending messages, see **[EMBEDDING.md](EM
 {
   type: 'message',
   role: 'patient' | 'physician',
+  senderId: 100,  // Integer user/patient ID
   channel: 'portal' | 'sms' | 'voicemail' | 'auto',
   time: '2025-10-29 08:12',
   text: 'Message text'

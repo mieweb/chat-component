@@ -78,7 +78,7 @@ function handleMessageSent(data) {
 const conversationsData = {
   conversations: [
     {
-      id: 'conv-123',
+      id: 735,
       title: 'Patient: John Doe',
       open: true,
       unread: false,
@@ -87,6 +87,7 @@ const conversationsData = {
         {
           type: 'message',
           role: 'patient',
+          senderId: 100,
           channel: 'portal',
           time: '2025-10-29 14:15',
           text: 'I have a question about my medication.'
@@ -94,6 +95,7 @@ const conversationsData = {
         {
           type: 'message',
           role: 'physician',
+          senderId: 200,
           channel: 'portal',
           time: '2025-10-29 14:30',
           text: 'Sure, what would you like to know?'
@@ -101,7 +103,7 @@ const conversationsData = {
       ]
     }
   ],
-  activeConversationId: 'conv-123'
+  activeConversationId: 735
 };
 
 // Load the data after component mounts
@@ -201,7 +203,7 @@ function handleMessageSent(data) {
 
 ```javascript
 {
-  id: 'string',              // Unique conversation ID
+  id: 735,              // Unique conversation ID (integer)
   title: 'string',           // Display title
   open: boolean,             // true = open, false = closed
   unread: boolean,           // true if has unread messages
@@ -219,6 +221,7 @@ function handleMessageSent(data) {
 {
   type: 'message',
   role: 'patient' | 'physician',
+  senderId: 100,  // Integer user/patient ID
   channel: 'auto' | 'portal' | 'sms' | 'voicemail',
   time: '2025-10-29 14:30',
   text: 'Message content here'

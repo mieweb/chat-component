@@ -21,56 +21,56 @@ export const channelIcon = (channel) => {
 // Initial sample data
 const initialConversations = [
   {
-    id: 'c1',
+    id: 735,
     title: 'General Question',
     open: true,
     unread: true,
     lastActivity: '2025-10-29 09:30',
     thread: [
-      { type: 'message', role: 'external', senderId: 'patient-jane', channel: 'sms', time: '2025-10-29 08:12', text: "Good morning, I'm still having pain in my right side." },
+      { type: 'message', role: 'external', senderId: 100, channel: 'sms', time: '2025-10-29 08:12', text: "Good morning, I'm still having pain in my right side." },
       { type: 'lab', time: '2025-10-29 08:30', title: 'CBC Result', summary: 'WBC elevated (12.3), mild neutrophilia.', lastComment: 'Reviewed by Dr. Smith: Consistent with mild infection, recommend follow-up.' },
-      { type: 'message', role: 'internal', senderId: 'physician-smith', channel: 'portal', time: '2025-10-29 08:35', text: "Jane, your bloodwork shows a mild infection. I'd like to order an abdominal x-ray to check further." },
+      { type: 'message', role: 'internal', senderId: 200, channel: 'portal', time: '2025-10-29 08:35', text: "Jane, your bloodwork shows a mild infection. I'd like to order an abdominal x-ray to check further." },
       { type: 'imaging', time: '2025-10-29 09:10', title: 'Abdominal X-ray', interpretation: 'No acute findings. Mild constipation noted.', radiologist: 'No evidence of obstruction or free air.' },
-      { type: 'message', role: 'external', senderId: 'patient-jane', channel: 'portal', time: '2025-10-29 09:22', text: "Thank you for letting me know. Should I change my diet or take anything for the constipation?" },
-      { type: 'message', role: 'internal', senderId: 'physician-smith', channel: 'auto', time: '2025-10-29 09:30', text: "Increase your water and fiber intake. If no improvement in 2 days, let me know." },
+      { type: 'message', role: 'external', senderId: 100, channel: 'portal', time: '2025-10-29 09:22', text: "Thank you for letting me know. Should I change my diet or take anything for the constipation?" },
+      { type: 'message', role: 'internal', senderId: 200, channel: 'auto', time: '2025-10-29 09:30', text: "Increase your water and fiber intake. If no improvement in 2 days, let me know." },
       { type: 'lab', time: '2025-10-29 10:05', title: 'Urinalysis', summary: 'Trace leukocytes, otherwise unremarkable.', lastComment: 'Reviewed by Dr. Smith: No evidence of UTI.' }
     ]
   },
   {
-    id: 'c2',
+    id: 736,
     title: 'Work related illness',
     open: true,
     unread: false,
     lastActivity: '2025-10-28 16:20',
     thread: [
-      { type: 'message', role: 'external', senderId: 'patient-jane', channel: 'portal', time: '2025-10-28 14:10', text: "I was exposed to fumes at work and now I'm coughing." },
+      { type: 'message', role: 'external', senderId: 100, channel: 'portal', time: '2025-10-28 14:10', text: "I was exposed to fumes at work and now I'm coughing." },
       { type: 'lab', time: '2025-10-28 15:05', title: 'Carboxyhemoglobin', summary: '3.2% (slightly elevated).', lastComment: 'Reviewed by NP Lee: counsel on exposure avoidance.' },
       { type: 'imaging', time: '2025-10-28 15:40', title: 'Chest X-ray PA/LAT', interpretation: 'Mild peribronchial thickening; no consolidation.', radiologist: 'Findings may reflect bronchitis; correlate clinically.' },
-      { type: 'message', role: 'internal', senderId: 'physician-smith', channel: 'sms', time: '2025-10-28 16:20', text: "Findings suggest mild bronchitis. Rest, fluids, and use your inhaler PRN. Follow up if symptoms worsen." }
+      { type: 'message', role: 'internal', senderId: 200, channel: 'sms', time: '2025-10-28 16:20', text: "Findings suggest mild bronchitis. Rest, fluids, and use your inhaler PRN. Follow up if symptoms worsen." }
     ]
   },
   {
-    id: 'c3',
+    id: 737,
     title: 'Refill Request',
     open: false,
     unread: false,
     lastActivity: '2025-10-27 11:05',
     thread: [
-      { type: 'message', role: 'external', senderId: 'patient-jane', channel: 'sms', time: '2025-10-27 10:02', text: "I need a refill of my lisinopril 10 mg." },
+      { type: 'message', role: 'external', senderId: 100, channel: 'sms', time: '2025-10-27 10:02', text: "I need a refill of my lisinopril 10 mg." },
       { type: 'event', eventType: 'rx', time: '2025-10-27 10:40', title: 'Prescription Sent', summary: 'Lisinopril 10 mg #90 with 1 refill to CVS Pharmacy.', note: 'E-prescribed by Dr. Smith.' },
-      { type: 'message', role: 'internal', senderId: 'physician-smith', channel: 'auto', time: '2025-10-27 11:05', text: "Your refill was sent to CVS. You'll receive a confirmation soon." }
+      { type: 'message', role: 'internal', senderId: 200, channel: 'auto', time: '2025-10-27 11:05', text: "Your refill was sent to CVS. You'll receive a confirmation soon." }
     ]
   },
   {
-    id: 'c4',
+    id: 738,
     title: 'Appointment Request',
     open: true,
     unread: true,
     lastActivity: '2025-10-30 13:18',
     thread: [
-      { type: 'message', role: 'external', senderId: 'patient-jane', channel: 'portal', time: '2025-10-30 12:55', text: "Can I schedule a follow-up for next week?" },
+      { type: 'message', role: 'external', senderId: 100, channel: 'portal', time: '2025-10-30 12:55', text: "Can I schedule a follow-up for next week?" },
       { type: 'event', eventType: 'appt', time: '2025-10-30 13:10', title: 'Scheduling Note', summary: 'Proposed slots: Tue 10:30 AM, Thu 2:00 PM.', note: 'Coordinator will confirm.' },
-      { type: 'message', role: 'internal', senderId: 'physician-smith', channel: 'sms', time: '2025-10-30 13:18', text: "We have Tue 10:30 AM or Thu 2 PM available. Which do you prefer?" }
+      { type: 'message', role: 'internal', senderId: 200, channel: 'sms', time: '2025-10-30 13:18', text: "We have Tue 10:30 AM or Thu 2 PM available. Which do you prefer?" }
     ]
   }
 ];
@@ -81,6 +81,7 @@ const useChatStore = create((set, get) => ({
   activeConversationId: initialConversations[0]?.id || null,
   searchQuery: '',
   sidebarOpen: false,
+  currentUserId: null,
 
   // Get active conversation
   getActiveConversation: () => {
@@ -90,11 +91,12 @@ const useChatStore = create((set, get) => ({
 
   // Set active conversation
   setActiveConversation: (id) => {
-    set({ activeConversationId: id });
+    const intId = parseInt(id, 10);
+    set({ activeConversationId: intId });
     // Mark as read
-    const conversation = get().conversations.find(c => c.id === id);
+    const conversation = get().conversations.find(c => c.id === intId);
     if (conversation) {
-      get().updateConversation(id, { unread: false });
+      get().updateConversation(intId, { unread: false });
     }
   },
 
@@ -107,24 +109,18 @@ const useChatStore = create((set, get) => ({
     const now = new Date();
     const timestamp = now.toISOString().slice(0, 16).replace('T', ' ');
     
-    // Determine role from senderId if not explicitly provided
-    let role = message.role || 'internal';
-    if (message.senderId) {
-      // Extract role from senderId prefix
-      // 'patient-*' or 'family-*' = external
-      // 'physician-*', 'nurse-*', 'staff-*', etc. = internal
-      const senderIdPrefix = message.senderId.split('-')[0];
-      if (senderIdPrefix === 'patient' || senderIdPrefix === 'family') {
-        role = 'external';
-      } else {
-        role = 'internal';
-      }
-    }
+    // Ensure senderId is an integer if provided
+    const senderId = message.senderId !== null && message.senderId !== undefined 
+      ? parseInt(message.senderId, 10) 
+      : null;
+    
+    // Use provided role, default to 'internal'
+    const role = message.role || 'internal';
     
     const newMessage = {
       type: 'message',
       role: role,
-      senderId: message.senderId || null,
+      senderId: senderId,
       channel: message.channel || 'auto',
       time: timestamp,
       text: message.text,
@@ -148,30 +144,34 @@ const useChatStore = create((set, get) => ({
 
   // Update conversation
   updateConversation: (id, updates) => {
+    const intId = parseInt(id, 10);
     set(state => ({
       conversations: state.conversations.map(c =>
-        c.id === id ? { ...c, ...updates } : c
+        c.id === intId ? { ...c, ...updates } : c
       )
     }));
   },
 
   // Toggle conversation open/closed
   toggleConversationStatus: (id) => {
-    const conversation = get().conversations.find(c => c.id === id);
+    const intId = parseInt(id, 10);
+    const conversation = get().conversations.find(c => c.id === intId);
     if (conversation) {
-      get().updateConversation(id, { open: !conversation.open });
+      get().updateConversation(intId, { open: !conversation.open });
     }
   },
 
   // Mark conversation as unread
   markAsUnread: (id) => {
-    get().updateConversation(id, { unread: true });
+    const intId = parseInt(id, 10);
+    get().updateConversation(intId, { unread: true });
   },
 
   // Create new conversation
   createConversation: (title) => {
     const now = new Date().toISOString().slice(0, 16).replace('T', ' ');
-    const id = 'c' + Math.random().toString(36).slice(2, 8);
+    // Generate a random integer ID (in production this would come from database AUTO_INCREMENT)
+    const id = Math.floor(Math.random() * 1000000) + 1000;
     
     const newConversation = {
       id,
@@ -213,20 +213,50 @@ const useChatStore = create((set, get) => ({
     set({ sidebarOpen: open });
   },
 
+  // Set current user ID
+  setCurrentUserId: (userId) => {
+    const intUserId = userId !== null && userId !== undefined ? parseInt(userId, 10) : null;
+    set({ currentUserId: intUserId });
+  },
+
   // Replace entire state with new data
   loadConversations: (data) => {
+    // Ensure all IDs are integers
+    const conversations = (data.conversations || []).map(conv => ({
+      ...conv,
+      id: parseInt(conv.id, 10),
+      thread: (conv.thread || []).map(item => {
+        // Parse senderId in messages if present
+        if (item.type === 'message' && item.senderId !== null && item.senderId !== undefined) {
+          return {
+            ...item,
+            senderId: parseInt(item.senderId, 10)
+          };
+        }
+        return item;
+      })
+    }));
+    const activeId = data.activeConversationId 
+      ? parseInt(data.activeConversationId, 10) 
+      : conversations[0]?.id || null;
+    const userId = data.currentUserId !== undefined 
+      ? parseInt(data.currentUserId, 10) 
+      : null;
+    
     set({
-      conversations: data.conversations || [],
-      activeConversationId: data.activeConversationId || data.conversations?.[0]?.id || null,
+      conversations,
+      activeConversationId: activeId,
+      ...(userId !== null && { currentUserId: userId }),
     });
   },
 
   // Export current state
   exportState: () => {
-    const { conversations, activeConversationId } = get();
+    const { conversations, activeConversationId, currentUserId } = get();
     return {
       conversations,
       activeConversationId,
+      currentUserId,
     };
   },
 }));

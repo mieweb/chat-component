@@ -27,9 +27,27 @@
           <button class="btn btn-primary me-2" id="exportBtn">
             Export State
           </button>
-          <button class="btn btn-secondary" id="loadCustomBtn">
+          <button class="btn btn-secondary me-2" id="loadCustomBtn">
             Load Custom Data
           </button>
+          <button class="btn btn-success" id="applyJsonBtn">
+            Apply JSON to Store
+          </button>
+        </div>
+
+        <!-- JSON Editor Card -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">JSON State Editor</h5>
+            <p class="text-muted">Edit the JSON below and click "Apply JSON to Store" to update the chat component state.</p>
+            <textarea 
+              id="jsonEditor" 
+              class="form-control font-monospace" 
+              rows="15"
+              style="font-size: 0.9rem;"
+            ></textarea>
+            <div id="jsonError" class="alert alert-danger mt-2" style="display: none;"></div>
+          </div>
         </div>
 
         <!-- Bootstrap Card containing the Chat Component -->
@@ -114,15 +132,40 @@
       React.createElement(ChatComponent.default, {
         onMessageSent: handleMessageSent,
         height: '500px',
-        maxWidth: '100%'
+        maxWidth: '100%',
+        currentUserId: 'physician-smith' // Add the current user ID here
       })
     );
+    
+    // Initialize JSON editor with current state
+    function updateJsonEditor() {
+      const state = ChatComponent.useChatStore.getState().exportState();
+      document.getElementById('jsonEditor').value = JSON.stringify(state, null, 2);
+    }
+    
+    // Subscribe to store changes to keep JSON editor in sync
+    ChatComponent.useChatStore.subscribe((state) => {
+      const jsonEditor = document.getElementById('jsonEditor');
+      // Only update if the editor is not currently focused (to avoid disrupting manual editing)
+      if (document.activeElement !== jsonEditor) {
+        updateJsonEditor();
+      }
+    });
+    
+    // Initialize editor with current state
+    updateJsonEditor();
     
     // Export button handler
     document.getElementById('exportBtn').addEventListener('click', () => {
       const state = ChatComponent.useChatStore.getState().exportState();
       console.log('Exported state:', state);
-      alert('State exported to console. Check the browser console for details.');
+      
+      // Copy to clipboard
+      navigator.clipboard.writeText(JSON.stringify(state, null, 2)).then(() => {
+        alert('State exported to console and copied to clipboard!');
+      }).catch(() => {
+        alert('State exported to console. Check the browser console for details.');
+      });
     });
     
     // Load custom data button handler
@@ -130,7 +173,7 @@
       const customData = {
         conversations: [
           {
-            id: 'custom1',
+            id: 739,
             title: 'Custom Conversation',
             open: true,
             unread: false,
@@ -146,10 +189,40 @@
             ]
           }
         ],
-        activeConversationId: 'custom1'
+        activeConversationId: 739
       };
       
       ChatComponent.useChatStore.getState().loadConversations(customData);
+    });
+    
+    // Apply JSON button handler
+    document.getElementById('applyJsonBtn').addEventListener('click', () => {
+      const jsonEditor = document.getElementById('jsonEditor');
+      const jsonError = document.getElementById('jsonError');
+      
+      try {
+        const data = JSON.parse(jsonEditor.value);
+        ChatComponent.useChatStore.getState().loadConversations(data);
+        
+        // Hide error message
+        jsonError.style.display = 'none';
+        
+        // Show success feedback
+        const btn = document.getElementById('applyJsonBtn');
+        const originalText = btn.textContent;
+        btn.textContent = '✓ Applied!';
+        btn.classList.remove('btn-success');
+        btn.classList.add('btn-success');
+        setTimeout(() => {
+          btn.textContent = originalText;
+        }, 2000);
+        
+      } catch (error) {
+        // Show error message
+        jsonError.textContent = 'Invalid JSON: ' + error.message;
+        jsonError.style.display = 'block';
+        console.error('JSON parsing error:', error);
+      }
     });
   </script>
 </body>

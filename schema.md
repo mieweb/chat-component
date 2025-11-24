@@ -260,3 +260,15 @@ Your future component will:
   * Verification badges
   * Attachment previews
   * Document reference linking (`attach_doc_id`)
+
+## 7. Notes
+
+Chat Model from conversation_messages
+```
+{
+	...
+	role: {{#if user_id > 0}}'internal'{{#else}}'external'{{/if}},
+	senderId: {{#if user_id > 0}}{{user_id}}{{#else}}{{pat_id}}{{/if}},
+	...
+}
+```
