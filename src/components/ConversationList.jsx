@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import useChatStore, { formatTime } from '../store';
 
-const ConversationList = () => {
+const ConversationList = ({ onConversationOpened = null, onConversationCreated = null }) => {
   const conversations = useChatStore(state => state.conversations);
   const activeConversationId = useChatStore(state => state.activeConversationId);
   const setActiveConversation = useChatStore(state => state.setActiveConversation);
@@ -13,15 +13,32 @@ const ConversationList = () => {
   const [newConvTitle, setNewConvTitle] = useState('');
 
   const handleSelectConversation = (id) => {
+    const conversation = conversations.find(c => c.id === id);
     setActiveConversation(id);
     setSidebarOpen(false);
+    
+    // Trigger callback if provided
+    if (onConversationOpened && conversation) {
+      onConversationOpened({
+        conversationId: id,
+        conversation: conversation
+      });
+    }
   };
 
   const handleCreateConversation = () => {
     const title = newConvTitle.trim() || 'New Conversation';
-    createConversation(title);
+    const newConversation = createConversation(title);
     setShowNewDialog(false);
     setNewConvTitle('');
+    
+    // Trigger callback if provided
+    if (onConversationCreated && newConversation) {
+      onConversationCreated({
+        conversationId: newConversation.id,
+        conversation: newConversation
+      });
+    }
   };
 
   const filteredConversations = conversations

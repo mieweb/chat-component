@@ -218,7 +218,7 @@ For detailed examples of receiving and sending messages, see **[EMBEDDING.md](EM
 ```javascript
 {
   type: 'message',
-  role: 'patient' | 'physician',
+  role: 'external' | 'internal',
   senderId: 100,  // Integer user/patient ID
   channel: 'portal' | 'sms' | 'voicemail' | 'auto',
   time: '2025-10-29 08:12',
@@ -226,42 +226,26 @@ For detailed examples of receiving and sending messages, see **[EMBEDDING.md](EM
 }
 ```
 
-#### Lab Result
+#### Reference (Lab, Imaging, Prescription, Appointment, etc.)
 
 ```javascript
 {
-  type: 'lab',
+  type: 'ref',
+  refType: 'doc' | 'rx' | 'appt',  // Document, Prescription, Appointment, etc.
+  refId: 1001,  // Reference to external document/record ID
+  role: 'internal',
+  senderId: 200,
+  channel: 'auto',
   time: '2025-10-29 08:30',
-  title: 'CBC Result',
-  summary: 'WBC elevated (12.3)',
-  lastComment: 'Reviewed by Dr. Smith'
+  text: 'CBC Result: WBC elevated (12.3), mild neutrophilia. Reviewed by Dr. Smith: Consistent with mild infection, recommend follow-up.'
 }
 ```
 
-#### Imaging Report
-
-```javascript
-{
-  type: 'imaging',
-  time: '2025-10-29 09:10',
-  title: 'Abdominal X-ray',
-  interpretation: 'No acute findings',
-  radiologist: 'No evidence of obstruction'
-}
-```
-
-#### Event
-
-```javascript
-{
-  type: 'event',
-  eventType: 'rx' | 'appt',
-  time: '2025-10-27 10:40',
-  title: 'Prescription Sent',
-  summary: 'Lisinopril 10 mg #90',
-  note: 'E-prescribed by Dr. Smith'
-}
-```
+**Reference Types:**
+- `doc` - Documents (lab results, imaging reports, clinical notes)
+- `rx` - Prescriptions
+- `appt` - Appointments
+- Additional types can be added as needed
 
 ## Loading Custom Data
 

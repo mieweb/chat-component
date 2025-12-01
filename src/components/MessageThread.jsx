@@ -31,99 +31,39 @@ const MessageItem = ({ item, currentUserId }) => {
     );
   }
 
-  if (item.type === 'lab') {
-    return (
-      <div className="tw-mb-5 tw-flex tw-flex-col tw-items-center">
-        <div 
-          className="tw-bg-[#f9fbe7] tw-border tw-border-l-[5px] tw-border-l-[#64b5f6] tw-rounded-xl tw-px-4 tw-py-3 tw-max-w-[85%] tw-text-[15px] tw-shadow-sm tw-flex tw-flex-col tw-gap-1"
-          style={{ borderColor: '#e6ee9c', borderLeftColor: '#64b5f6' }}
-        >
-          <div className="tw-font-bold tw-text-[#333]">
-            <span className="tw-text-sm">🧪</span>{' '}
-            <a 
-              href={`#lab?${encodeURIComponent(item.title)}`}
-              className="tw-text-xs tw-underline tw-ml-2"
-              style={{ color: 'var(--chat-primary)' }}
-            >
-              {item.title}
-            </a>
-          </div>
-          <div className="tw-text-[#444]">
-            {item.summary}
-            <br />
-            <em>Last comment:</em> "{item.lastComment}"
-          </div>
-          <div className="tw-text-xs tw-text-[#888] tw-mt-0.5">
-            {time} · Lab result
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (item.type === 'imaging') {
-    return (
-      <div className="tw-mb-5 tw-flex tw-flex-col tw-items-center">
-        <div 
-          className="tw-bg-[#f9fbe7] tw-border tw-border-l-[5px] tw-border-l-[#ffb74d] tw-rounded-xl tw-px-4 tw-py-3 tw-max-w-[85%] tw-text-[15px] tw-shadow-sm tw-flex tw-flex-col tw-gap-1"
-          style={{ borderColor: '#e6ee9c', borderLeftColor: '#ffb74d' }}
-        >
-          <div className="tw-font-bold tw-text-[#333]">
-            <span className="tw-text-sm">🩻</span>{' '}
-            <a 
-              href={`#imaging?${encodeURIComponent(item.title)}`}
-              className="tw-text-xs tw-underline tw-ml-2"
-              style={{ color: 'var(--chat-primary)' }}
-            >
-              {item.title}
-            </a>
-          </div>
-          <div className="tw-text-[#444]">
-            <strong>Interpretation:</strong> {item.interpretation}
-            <br />
-            <em>Radiologist:</em> "{item.radiologist}"
-          </div>
-          <div className="tw-text-xs tw-text-[#888] tw-mt-0.5">
-            {time} · Imaging
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (item.type === 'event') {
-    const isRx = item.eventType === 'rx';
-    const icon = isRx ? '💊' : '🗓️';
-    const tag = isRx ? 'Prescription' : 'Event';
-    const borderColor = isRx ? '#80cbc4' : '#64b5f6';
+  if (item.type === 'ref') {
+    // Determine styling based on refType
+    const refConfig = {
+      doc: { icon: '📄', label: 'Document', borderColor: '#64b5f6' },
+      rx: { icon: '💊', label: 'Prescription', borderColor: '#80cbc4' },
+      appt: { icon: '🗓️', label: 'Appointment', borderColor: '#64b5f6' },
+    };
+    
+    const config = refConfig[item.refType] || { icon: '📎', label: 'Reference', borderColor: '#64b5f6' };
 
     return (
       <div className="tw-mb-5 tw-flex tw-flex-col tw-items-center">
         <div 
           className="tw-bg-[#f9fbe7] tw-border tw-border-l-[5px] tw-rounded-xl tw-px-4 tw-py-3 tw-max-w-[85%] tw-text-[15px] tw-shadow-sm tw-flex tw-flex-col tw-gap-1"
-          style={{ borderColor: '#e6ee9c', borderLeftColor: borderColor }}
+          style={{ borderColor: '#e6ee9c', borderLeftColor: config.borderColor }}
         >
-          <div className="tw-font-bold tw-text-[#333]">
-            <span className="tw-text-sm">{icon}</span>{' '}
-            <a 
-              href={`#event?${encodeURIComponent(item.title)}`}
-              className="tw-text-xs tw-underline tw-ml-2"
-              style={{ color: 'var(--chat-primary)' }}
-            >
-              {item.title}
-            </a>
-          </div>
-          <div className="tw-text-[#444]">
-            {item.summary}
-            {item.note && (
-              <>
-                <br />
-                <em>{item.note}</em>
-              </>
+          <div className="tw-font-bold tw-text-[#333] tw-flex tw-items-center tw-gap-2">
+            <span className="tw-text-sm">{config.icon}</span>
+            {item.refId && (
+              <a 
+                href={`#${item.refType}/${item.refId}`}
+                className="tw-text-xs tw-underline"
+                style={{ color: 'var(--chat-primary)' }}
+              >
+                {config.label}
+              </a>
             )}
           </div>
-          <div className="tw-text-xs tw-text-[#888] tw-mt-0.5">
-            {time} · {tag}
+          <div className="tw-text-[#444]">
+            <span dangerouslySetInnerHTML={{ __html: item.text.replace(/\n/g, '<br>') }} />
+          </div>
+          <div className="tw-text-xs tw-text-[#888] tw-mt-0.5 tw-flex tw-items-center tw-gap-1.5">
+            {channelLabel(item.channel)} · {time}
           </div>
         </div>
       </div>

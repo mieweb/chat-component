@@ -62,7 +62,7 @@ INSERT INTO conversation_messages (
   '2025-10-29 08:12:00'
 );
 
--- Message 2: Lab result (CBC)
+-- Message 2: Audiogram result
 INSERT INTO conversation_messages (
   convo_id,
   doc_id,
@@ -81,21 +81,21 @@ INSERT INTO conversation_messages (
 ) VALUES (
   2,
   735,
-  1001, -- attach_doc_id (lab document reference)
+  572, -- attach_doc_id (audiogram document reference)
   18,
-  100, -- system user for lab interface
-  'CBC Result: WBC elevated (12.3), mild neutrophilia.\n\nReviewed by Dr. Smith: Consistent with mild infection, recommend follow-up.',
-  '<h4>CBC Result</h4><p><strong>Summary:</strong> WBC elevated (12.3), mild neutrophilia.</p><p><strong>Last Comment:</strong> Reviewed by Dr. Smith: Consistent with mild infection, recommend follow-up.</p>',
+  100, -- system user for audiology interface
+  'Audiogram: Mild high-frequency hearing loss bilaterally.\n\nReviewed by Dr. Smith: Recommend hearing protection and follow-up in 6 months.',
+  '<h4>Audiogram</h4><p><strong>Summary:</strong> Mild high-frequency hearing loss bilaterally.</p><p><strong>Last Comment:</strong> Reviewed by Dr. Smith: Recommend hearing protection and follow-up in 6 months.</p>',
   'en-US',
   'Article',
-  'https://example.org/actors/lab-system',
+  'https://example.org/actors/audiology-system',
   'local',
   'internal_service',
   'direct',
   '2025-10-29 08:30:00'
 );
 
--- Message 3: Physician response about bloodwork
+-- Message 3: Physician response about hearing test
 INSERT INTO conversation_messages (
   convo_id,
   doc_id,
@@ -114,8 +114,8 @@ INSERT INTO conversation_messages (
   735,
   18,
   104, -- physician user ID
-  "Jane, your bloodwork shows a mild infection. I'd like to order an abdominal x-ray to check further.",
-  '<p>Jane, your bloodwork shows a mild infection. I''d like to order an abdominal x-ray to check further.</p>',
+  "Jane, your hearing test shows some mild loss. Let's also check your heart with an echocardiogram to ensure everything is working well.",
+  '<p>Jane, your hearing test shows some mild loss. Let''s also check your heart with an echocardiogram to ensure everything is working well.</p>',
   'en-US',
   'https://example.org/actors/user-104',
   'local',
@@ -124,7 +124,7 @@ INSERT INTO conversation_messages (
   '2025-10-29 08:35:00'
 );
 
--- Message 4: Imaging result (Abdominal X-ray)
+-- Message 4: Echocardiogram result
 INSERT INTO conversation_messages (
   convo_id,
   doc_id,
@@ -143,21 +143,21 @@ INSERT INTO conversation_messages (
 ) VALUES (
   4,
   735,
-  2001, -- attach_doc_id (imaging document reference)
+  451, -- attach_doc_id (echocardiogram document reference)
   18,
-  100, -- system user for imaging interface
-  'Abdominal X-ray\n\nInterpretation: No acute findings. Mild constipation noted.\n\nRadiologist: No evidence of obstruction or free air.',
-  '<h4>Abdominal X-ray</h4><p><strong>Interpretation:</strong> No acute findings. Mild constipation noted.</p><p><strong>Radiologist:</strong> No evidence of obstruction or free air.</p>',
+  100, -- system user for cardiology interface
+  'Echocardiogram\n\nInterpretation: Normal left ventricular function (EF 60%). No valvular abnormalities.\n\nCardiologist: Overall heart function is normal.',
+  '<h4>Echocardiogram</h4><p><strong>Interpretation:</strong> Normal left ventricular function (EF 60%). No valvular abnormalities.</p><p><strong>Cardiologist:</strong> Overall heart function is normal.</p>',
   'en-US',
   'Article',
-  'https://example.org/actors/imaging-system',
+  'https://example.org/actors/cardiology-system',
   'local',
   'internal_service',
   'direct',
   '2025-10-29 09:10:00'
 );
 
--- Message 5: Patient follow-up question about diet
+-- Message 5: Patient follow-up question
 INSERT INTO conversation_messages (
   convo_id,
   doc_id,
@@ -176,8 +176,8 @@ INSERT INTO conversation_messages (
   735,
   18,
   0, -- external user (patient)
-  "Thank you for letting me know. Should I change my diet or take anything for the constipation?",
-  '<p>Thank you for letting me know. Should I change my diet or take anything for the constipation?</p>',
+  "Thank you for letting me know. That's a relief! Should I do anything about the hearing loss?",
+  '<p>Thank you for letting me know. That''s a relief! Should I do anything about the hearing loss?</p>',
   'en-US',
   'https://example.org/actors/patient-18',
   'local',
@@ -186,7 +186,7 @@ INSERT INTO conversation_messages (
   '2025-10-29 09:22:00'
 );
 
--- Message 6: Physician's automated response with dietary advice
+-- Message 6: Physician's automated response with hearing advice
 INSERT INTO conversation_messages (
   convo_id,
   doc_id,
@@ -205,8 +205,8 @@ INSERT INTO conversation_messages (
   735,
   18,
   104, -- physician user ID
-  "Increase your water and fiber intake. If no improvement in 2 days, let me know.",
-  '<p>Increase your water and fiber intake. If no improvement in 2 days, let me know.</p>',
+  "Use hearing protection in loud environments. We'll recheck in 6 months to monitor any changes.",
+  '<p>Use hearing protection in loud environments. We''ll recheck in 6 months to monitor any changes.</p>',
   'en-US',
   'https://example.org/actors/user-104',
   'local',
@@ -215,120 +215,96 @@ INSERT INTO conversation_messages (
   '2025-10-29 09:30:00'
 );
 
--- Message 7: Lab result (Urinalysis)
+-- ========================================
+-- 4. Second Conversation: "Work related illness" (doc_id 736)
+-- ========================================
+
+-- Create the conversation document
+INSERT INTO documents (
+  doc_id,
+  doc_type,
+  pat_id,
+  user_id,
+  origin_date,
+  service_date
+) VALUES (
+  736, -- doc_id
+  'CONVERS', -- doc_type (10 char max)
+  18, -- patient ID (example)
+  104, -- user_id (physician)
+  '2025-10-28 14:10:00', -- origin_date (created_datetime)
+  '2025-10-28 14:10:00' -- service_date
+);
+
+-- Store the conversation title in documents_txt
+INSERT INTO documents_txt (
+  doc_id,
+  subject
+) VALUES (
+  736,
+  'Work related illness'
+);
+
+-- Message 1: Patient's initial message about fume exposure
 INSERT INTO conversation_messages (
   convo_id,
   doc_id,
-  attach_doc_id,
   pat_id,
   user_id,
   message,
   content_html,
   language,
-  ap_object_type,
   actor_iri,
   actor_scope,
   provenance,
   visibility,
   created_datetime
 ) VALUES (
-  7,
-  735,
-  1002, -- attach_doc_id (lab document reference)
-  18,
-  100, -- system user for lab interface
-  'Urinalysis: Trace leukocytes, otherwise unremarkable.\n\nReviewed by Dr. Smith: No evidence of UTI.',
-  '<h4>Urinalysis</h4><p><strong>Summary:</strong> Trace leukocytes, otherwise unremarkable.</p><p><strong>Last Comment:</strong> Reviewed by Dr. Smith: No evidence of UTI.</p>',
+  8,
+  736, -- doc_id from above
+  18, -- patient ID
+  0, -- external user (patient)
+  "I was exposed to fumes at work and now I'm coughing.",
+  '<p>I was exposed to fumes at work and now I''m coughing.</p>',
   'en-US',
-  'Article',
-  'https://example.org/actors/lab-system',
+  'https://example.org/actors/patient-18',
   'local',
-  'internal_service',
+  'local_user',
   'direct',
-  '2025-10-29 10:05:00'
+  '2025-10-28 14:10:00'
+);
+
+-- Message 2: Physician response via SMS
+INSERT INTO conversation_messages (
+  convo_id,
+  doc_id,
+  pat_id,
+  user_id,
+  message,
+  content_html,
+  language,
+  actor_iri,
+  actor_scope,
+  provenance,
+  visibility,
+  created_datetime
+) VALUES (
+  9,
+  736,
+  18,
+  104, -- physician user ID
+  "Sounds like you may have some bronchitis. Rest, fluids, and use your inhaler PRN. Follow up if symptoms worsen.",
+  '<p>Sounds like you may have some bronchitis. Rest, fluids, and use your inhaler PRN. Follow up if symptoms worsen.</p>',
+  'en-US',
+  'https://example.org/actors/user-104',
+  'local',
+  'external_client',
+  'direct',
+  '2025-10-28 14:30:00'
 );
 
 -- ========================================
--- 3. Optional: Create supporting lab/imaging documents
--- ========================================
-
--- Lab document for CBC
-INSERT INTO documents (
-  doc_id,
-  doc_type,
-  pat_id,
-  user_id,
-  origin_date,
-  service_date
-) VALUES (
-  1001,
-  'LABRESULT', -- doc_type (10 char max)
-  18,
-  100, -- system user
-  '2025-10-29 08:30:00',
-  '2025-10-29 08:30:00'
-);
-
-INSERT INTO documents_txt (
-  doc_id,
-  subject
-) VALUES (
-  1001,
-  'CBC Result'
-);
-
--- Imaging document for Abdominal X-ray
-INSERT INTO documents (
-  doc_id,
-  doc_type,
-  pat_id,
-  user_id,
-  origin_date,
-  service_date
-) VALUES (
-  2001,
-  'IMAGING', -- doc_type (10 char max)
-  18,
-  100, -- system user
-  '2025-10-29 09:10:00',
-  '2025-10-29 09:10:00'
-);
-
-INSERT INTO documents_txt (
-  doc_id,
-  subject
-) VALUES (
-  2001,
-  'Abdominal X-ray'
-);
-
--- Lab document for Urinalysis
-INSERT INTO documents (
-  doc_id,
-  doc_type,
-  pat_id,
-  user_id,
-  origin_date,
-  service_date
-) VALUES (
-  1002,
-  'LABRESULT', -- doc_type (10 char max)
-  18,
-  100, -- system user
-  '2025-10-29 10:05:00',
-  '2025-10-29 10:05:00'
-);
-
-INSERT INTO documents_txt (
-  doc_id,
-  subject
-) VALUES (
-  1002,
-  'Urinalysis'
-);
-
--- ========================================
--- 4. Verification Query
+-- 5. Verification Query
 -- ========================================
 -- Run this to verify the data was inserted correctly and matches the expected JSON structure
 
@@ -340,12 +316,7 @@ SELECT JSON_OBJECT(
   'thread', JSON_ARRAYAGG(
     JSON_OBJECT(
       'type', CASE 
-        WHEN cm.ap_object_type = 'Article' AND cm.attach_doc_id IS NOT NULL THEN 
-          CASE 
-            WHEN att_d.doc_type = 'LABRESULT' THEN 'lab'
-            WHEN att_d.doc_type = 'IMAGING' THEN 'imaging'
-            ELSE 'event'
-          END
+        WHEN cm.ap_object_type = 'Article' AND cm.attach_doc_id IS NOT NULL THEN 'event'
         ELSE 'message'
       END,
       'role', IF(cm.user_id > 0, 'internal', 'external'),
@@ -369,6 +340,6 @@ LEFT JOIN documents d ON d.doc_id = cm.doc_id
 LEFT JOIN documents_txt dt ON dt.doc_id = cm.doc_id
 LEFT JOIN documents att_d ON att_d.doc_id = cm.attach_doc_id
 LEFT JOIN documents_txt att_dt ON att_dt.doc_id = cm.attach_doc_id
-WHERE cm.doc_id = 735
+WHERE cm.doc_id IN (735, 736)
   AND cm.deleted_at IS NULL
 GROUP BY cm.doc_id;

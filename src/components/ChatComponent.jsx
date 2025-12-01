@@ -9,6 +9,8 @@ import '../styles.css';
 const ChatComponent = ({ 
   initialData = null,
   onMessageSent = null,
+  onConversationOpened = null, // Callback when a conversation is opened/selected
+  onConversationCreated = null, // Callback when a new conversation is created
   className = '',
   height = '500px',
   maxWidth = '1100px',
@@ -63,7 +65,10 @@ const ChatComponent = ({
           width: sidebarOpen ? '84vw' : '300px'
         }}
       >
-        <ConversationList />
+        <ConversationList 
+          onConversationOpened={onConversationOpened}
+          onConversationCreated={onConversationCreated}
+        />
       </aside>
 
       {/* Backdrop for mobile */}
