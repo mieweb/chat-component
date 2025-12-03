@@ -16,6 +16,11 @@ const MessageItem = ({ item, currentUserId }) => {
           isCurrentUser ? 'tw-items-end' : 'tw-items-start'
         }`}
       >
+        {item.sender_name && (
+          <div className="tw-text-xs tw-text-[#666] tw-mb-1 tw-font-medium">
+            {item.sender_name}
+          </div>
+        )}
         <div 
           className={`tw-max-w-[75%] tw-px-3.5 tw-py-2.5 tw-rounded-2xl tw-text-[15px] ${
             isCurrentUser ? 'tw-bg-[#c8e6c9]' : 'tw-bg-[#e3f2fd]'
@@ -49,6 +54,9 @@ const MessageItem = ({ item, currentUserId }) => {
         >
           <div className="tw-font-bold tw-text-[#333] tw-flex tw-items-center tw-gap-2">
             <span className="tw-text-sm">{config.icon}</span>
+            {item.title && (
+              <span>{item.title}</span>
+            )}
             {item.refId && (
               <a 
                 href={`#${item.refType}/${item.refId}`}

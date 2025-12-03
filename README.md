@@ -233,6 +233,7 @@ For detailed examples of receiving and sending messages, see **[EMBEDDING.md](EM
   type: 'ref',
   refType: 'doc' | 'rx' | 'appt',  // Document, Prescription, Appointment, etc.
   refId: 1001,  // Reference to external document/record ID
+  title: 'CBC Result',  // Optional: Display title for the reference
   role: 'internal',
   senderId: 200,
   channel: 'auto',

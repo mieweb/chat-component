@@ -10,6 +10,12 @@ export default defineConfig({
       jsxRuntime: 'classic',
     })
   ],
+  server: {
+    cors: {
+      origin: '*', // Allow all origins in development
+      credentials: true,
+    },
+  },
   build: {
     lib: {
       entry: './src/chat-component-embed.jsx',

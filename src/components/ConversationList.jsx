@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
 import useChatStore, { formatTime } from '../store';
 
-const ConversationList = ({ onConversationOpened = null, onConversationCreated = null }) => {
+const ConversationList = ({ onConversationOpened = null, onNewConversationClick = null }) => {
   const conversations = useChatStore(state => state.conversations);
   const activeConversationId = useChatStore(state => state.activeConversationId);
   const setActiveConversation = useChatStore(state => state.setActiveConversation);
-  const createConversation = useChatStore(state => state.createConversation);
   const setSidebarOpen = useChatStore(state => state.setSidebarOpen);
   
   const [searchQuery, setSearchQuery] = useState('');
-  const [showNewDialog, setShowNewDialog] = useState(false);
-  const [newConvTitle, setNewConvTitle] = useState('');
 
   const handleSelectConversation = (id) => {
     const conversation = conversations.find(c => c.id === id);
@@ -22,21 +19,6 @@ const ConversationList = ({ onConversationOpened = null, onConversationCreated =
       onConversationOpened({
         conversationId: id,
         conversation: conversation
-      });
-    }
-  };
-
-  const handleCreateConversation = () => {
-    const title = newConvTitle.trim() || 'New Conversation';
-    const newConversation = createConversation(title);
-    setShowNewDialog(false);
-    setNewConvTitle('');
-    
-    // Trigger callback if provided
-    if (onConversationCreated && newConversation) {
-      onConversationCreated({
-        conversationId: newConversation.id,
-        conversation: newConversation
       });
     }
   };
@@ -55,7 +37,7 @@ const ConversationList = ({ onConversationOpened = null, onConversationCreated =
         <button
           className="tw-px-2.5 tw-py-2 tw-rounded-lg tw-border-none tw-text-white tw-cursor-pointer"
           style={{ background: 'var(--chat-primary)' }}
-          onClick={() => setShowNewDialog(true)}
+          onClick={onNewConversationClick}
         >
           + New
         </button>
@@ -122,54 +104,6 @@ const ConversationList = ({ onConversationOpened = null, onConversationCreated =
           </div>
         ))}
       </div>
-
-      {/* New Conversation Modal */}
-      {showNewDialog && (
-        <div 
-          className="tw-fixed tw-inset-0 tw-bg-black tw-bg-opacity-50 tw-flex tw-items-center tw-justify-center tw-z-[2000]"
-          onClick={() => setShowNewDialog(false)}
-        >
-          <div 
-            className="tw-bg-white tw-rounded-lg tw-p-6 tw-min-w-[320px] tw-max-w-[90vw]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3 className="tw-mt-0 tw-mb-4 tw-text-lg tw-font-semibold">Create Conversation</h3>
-            <label className="tw-block tw-mb-1">Title</label>
-            <input
-              type="text"
-              className="tw-w-full tw-px-2.5 tw-py-2 tw-border tw-rounded-lg"
-              style={{ borderColor: 'var(--chat-border)' }}
-              placeholder="e.g., General Question"
-              value={newConvTitle}
-              onChange={(e) => setNewConvTitle(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  handleCreateConversation();
-                } else if (e.key === 'Escape') {
-                  setShowNewDialog(false);
-                }
-              }}
-              autoFocus
-            />
-            <div className="tw-flex tw-gap-2 tw-mt-3">
-              <button
-                className="tw-flex-1 tw-px-2.5 tw-py-2 tw-border tw-rounded-lg tw-bg-white tw-cursor-pointer"
-                style={{ borderColor: 'var(--chat-border)' }}
-                onClick={() => setShowNewDialog(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="tw-flex-1 tw-px-2.5 tw-py-2 tw-border-none tw-rounded-lg tw-text-white tw-cursor-pointer"
-                style={{ background: 'var(--chat-primary)' }}
-                onClick={handleCreateConversation}
-              >
-                Create
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 };
