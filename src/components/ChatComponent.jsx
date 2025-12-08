@@ -149,6 +149,7 @@ const ChatComponent = ({
             />
             <div className="tw-flex tw-gap-2 tw-mt-3">
               <button
+                type="button"
                 className="tw-flex-1 tw-px-2.5 tw-py-2 tw-border tw-rounded-lg tw-bg-white tw-cursor-pointer"
                 style={{ borderColor: 'var(--chat-border)' }}
                 onClick={() => setShowNewDialog(false)}
@@ -156,6 +157,7 @@ const ChatComponent = ({
                 Cancel
               </button>
               <button
+                type="button"
                 className="tw-flex-1 tw-px-2.5 tw-py-2 tw-border-none tw-rounded-lg tw-text-white tw-cursor-pointer"
                 style={{ background: 'var(--chat-primary)' }}
                 onClick={handleCreateConversation}

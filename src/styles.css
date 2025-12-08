@@ -19,4 +19,96 @@
   --chat-open-text: #1b5e20;
   --chat-closed-bg: #fff3e0;
   --chat-closed-text: #e65100;
+  
+  /* Reset critical properties to prevent external CSS interference */
+  box-sizing: border-box !important;
+  line-height: 1.5 !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Apply box-sizing reset to all children */
+.chat-component-root *,
+.chat-component-root *::before,
+.chat-component-root *::after {
+  box-sizing: border-box !important;
+}
+
+/* Reset common typography interference */
+.chat-component-root h1,
+.chat-component-root h2,
+.chat-component-root h3,
+.chat-component-root h4,
+.chat-component-root h5,
+.chat-component-root h6 {
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Reset button styles that might be overridden */
+.chat-component-root button {
+  font-family: inherit !important;
+  font-size: 100% !important;
+  line-height: inherit !important;
+  margin: 0 !important;
+  text-transform: none !important;
+  -webkit-appearance: button !important;
+  background-image: none !important;
+}
+
+/* Reset input styles */
+.chat-component-root input,
+.chat-component-root textarea,
+.chat-component-root select {
+  font-family: inherit !important;
+  font-size: 100% !important;
+  line-height: inherit !important;
+  margin: 0 !important;
+  background-color: transparent !important;
+}
+
+/* Reset list styles */
+.chat-component-root ul,
+.chat-component-root ol {
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Reset paragraph and div margins */
+.chat-component-root p,
+.chat-component-root div {
+  margin: 0 !important;
+}
+
+/* Reset link styles */
+.chat-component-root a {
+  color: inherit !important;
+  text-decoration: inherit !important;
+}
+
+/* Ensure proper color inheritance doesn't break contrast */
+.chat-component-root {
+  color: var(--chat-text) !important;
+  background-color: var(--chat-bg) !important;
+}
+
+/* Protect textarea wrapper from external height constraints */
+.chat-component-root .chat-compose-wrapper {
+  height: auto !important;
+  min-height: auto !important;
+  max-height: none !important;
+}
+
+/* Ensure textarea height is controlled by component logic, not external styles */
+.chat-component-root textarea {
+  height: auto !important;
+  min-height: auto !important;
+}
+
+/* Additional protection: override any external textarea_wrapper (underscore) styles that might leak in */
+.chat-component-root [class*="textarea"] {
+  height: auto !important;
 }

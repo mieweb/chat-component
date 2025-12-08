@@ -25,6 +25,7 @@ const TopBar = () => {
       style={{ borderColor: 'var(--chat-border)' }}
     >
       <button
+        type="button"
         className="tw-hidden max-[900px]:tw-inline-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-border tw-rounded-lg tw-bg-white tw-cursor-pointer"
         onClick={toggleSidebar}
         aria-label="Open conversations"
@@ -52,6 +53,7 @@ const TopBar = () => {
         </span>
         
         <button
+          type="button"
           className="tw-px-2.5 tw-py-1.5 tw-rounded-lg tw-border tw-bg-white tw-cursor-pointer tw-text-sm"
           onClick={handleToggleStatus}
           title="Toggle Open/Closed"
@@ -61,6 +63,7 @@ const TopBar = () => {
         </button>
         
         <button
+          type="button"
           className="tw-px-2.5 tw-py-1.5 tw-rounded-lg tw-border tw-bg-white tw-cursor-pointer tw-text-sm"
           onClick={handleMarkUnread}
           title="Mark unread"

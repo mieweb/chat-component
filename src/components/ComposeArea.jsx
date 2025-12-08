@@ -56,7 +56,7 @@ const ComposeArea = ({ onMessageSent, currentUserId = null }) => {
 
   return (
     <div 
-      className="tw-border-t tw-px-4 tw-py-3.5 tw-flex tw-flex-col tw-gap-2.5"
+      className="chat-compose-wrapper tw-border-t tw-px-4 tw-py-3.5 tw-flex tw-flex-col tw-gap-2.5"
       style={{ borderColor: 'var(--chat-border)' }}
     >
       <textarea
@@ -92,6 +92,7 @@ const ComposeArea = ({ onMessageSent, currentUserId = null }) => {
         <div className="tw-flex-1" />
         
         <button
+          type="button"
           className="tw-text-white tw-border-none tw-rounded-lg tw-px-4 tw-py-2.5 tw-text-[15px] tw-cursor-pointer hover:tw-bg-[var(--chat-primary-600)]"
           style={{ background: 'var(--chat-primary)' }}
           onClick={handleSend}

@@ -35,6 +35,7 @@ const ConversationList = ({ onConversationOpened = null, onNewConversationClick 
       >
         <span>Conversations</span>
         <button
+          type="button"
           className="tw-px-2.5 tw-py-2 tw-rounded-lg tw-border-none tw-text-white tw-cursor-pointer"
           style={{ background: 'var(--chat-primary)' }}
           onClick={onNewConversationClick}

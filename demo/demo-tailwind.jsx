@@ -46,6 +46,7 @@ function DemoApp() {
       
       <div style={{ marginBottom: '20px', display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
         <button 
+          type="button"
           onClick={handleExport}
           style={{
             padding: '10px 20px',
@@ -61,6 +62,7 @@ function DemoApp() {
         </button>
         
         <button 
+          type="button"
           onClick={toggleSimulator}
           style={{
             padding: '10px 20px',
