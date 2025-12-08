@@ -13,6 +13,7 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     allowedHosts: [
+      'localhost',
       'chat-component.opensource.mieweb.org',
     ],
     cors: {

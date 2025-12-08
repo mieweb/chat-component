@@ -14,7 +14,7 @@ jobs:
           proxmox_username: ${{ secrets.PROXMOX_USERNAME }}
           proxmox_password: ${{ secrets.PROXMOX_PASSWORD }}
           http_port: 80
-          linuxx_distribution: debian
+          linux_distribution: debian
 
           project_root: ""  # Leave blank for repository root
           install_command: "npm install"
