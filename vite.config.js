@@ -11,6 +11,10 @@ export default defineConfig({
     })
   ],
   server: {
+    host: '0.0.0.0',
+    allowedHosts: [
+      'chat-component.opensource.mieweb.org',
+    ],
     cors: {
       origin: '*', // Allow all origins in development
       credentials: true,
