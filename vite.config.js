@@ -1,10 +1,10 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import basicSsl from '@vitejs/plugin-basic-ssl'
+// import basicSsl from '@vitejs/plugin-basic-ssl'
 
 export default defineConfig({
   plugins: [
-    basicSsl(),
+    // basicSsl(), // Disabled - let nginx handle SSL
     react({
       // Disable Fast Refresh in library builds to prevent HMR code in production bundle
       jsxRuntime: 'classic',
@@ -12,6 +12,7 @@ export default defineConfig({
   ],
   server: {
     host: '0.0.0.0',
+	port: 8080,
     allowedHosts: [
       'localhost',
       'chat-component.opensource.mieweb.org',
