@@ -30,6 +30,16 @@ Tests internationalization support:
 - Text expansion handling
 - Language attributes
 
+### `tailwind-simulator.spec.js`
+Tests the Tailwind demo simulator functionality:
+- Simulator toggle button
+- Dual component rendering
+- Shared state between components
+- Message alignment based on sender
+- Component labeling (Internal vs External user)
+- Responsive layout in simulator mode
+- Rapid toggling stability
+
 ## Running Tests
 
 ### Run all tests

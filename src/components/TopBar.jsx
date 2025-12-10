@@ -57,6 +57,7 @@ const TopBar = () => {
           className="tw-px-2.5 tw-py-1.5 tw-rounded-lg tw-border tw-bg-white tw-cursor-pointer tw-text-sm"
           onClick={handleToggleStatus}
           title="Toggle Open/Closed"
+          aria-label="Toggle conversation status"
           style={{ borderColor: 'var(--chat-border)' }}
         >
           Toggle
@@ -67,6 +68,7 @@ const TopBar = () => {
           className="tw-px-2.5 tw-py-1.5 tw-rounded-lg tw-border tw-bg-white tw-cursor-pointer tw-text-sm"
           onClick={handleMarkUnread}
           title="Mark unread"
+          aria-label="Mark conversation as unread"
           style={{ borderColor: 'var(--chat-border)' }}
         >
           Mark Unread

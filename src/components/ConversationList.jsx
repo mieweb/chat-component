@@ -39,6 +39,7 @@ const ConversationList = ({ onConversationOpened = null, onNewConversationClick 
           className="tw-px-2.5 tw-py-2 tw-rounded-lg tw-border-none tw-text-white tw-cursor-pointer"
           style={{ background: 'var(--chat-primary)' }}
           onClick={onNewConversationClick}
+          aria-label="Create new conversation"
         >
           + New
         </button>
@@ -55,6 +56,7 @@ const ConversationList = ({ onConversationOpened = null, onNewConversationClick 
           placeholder="Search conversations..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          aria-label="Search conversations"
         />
       </div>
 

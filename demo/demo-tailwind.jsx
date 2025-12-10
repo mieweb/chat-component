@@ -121,7 +121,7 @@ function DemoApp() {
             onMessageSent={handleMessageSent1}
             height="500px"
             maxWidth="100%"
-            currentUserId="physician-smith"
+            currentUserId={200}
           />
         </div>
         
@@ -143,7 +143,7 @@ function DemoApp() {
               onMessageSent={handleMessageSent2}
               height="500px"
               maxWidth="100%"
-              currentUserId="patient-jane"
+              currentUserId={100}
             />
             <div style={{
               marginTop: '10px',

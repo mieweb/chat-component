@@ -30,10 +30,8 @@ const ChatComponent = ({
 
   // Sync currentUserId prop with store
   React.useEffect(() => {
-    if (currentUserId !== storedCurrentUserId) {
-      setCurrentUserId(currentUserId);
-    }
-  }, [currentUserId, storedCurrentUserId, setCurrentUserId]);
+    setCurrentUserId(currentUserId);
+  }, [currentUserId, setCurrentUserId]);
 
   // Load initial data if provided
   React.useEffect(() => {

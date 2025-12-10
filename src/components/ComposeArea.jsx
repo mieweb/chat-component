@@ -68,6 +68,7 @@ const ComposeArea = ({ onMessageSent, currentUserId = null }) => {
         onChange={(e) => setText(e.target.value)}
         onKeyDown={handleKeyDown}
         rows={1}
+        aria-label="Message text"
       />
       
       <div className="tw-flex tw-items-center tw-gap-2.5 tw-flex-wrap">
@@ -96,6 +97,7 @@ const ComposeArea = ({ onMessageSent, currentUserId = null }) => {
           className="tw-text-white tw-border-none tw-rounded-lg tw-px-4 tw-py-2.5 tw-text-[15px] tw-cursor-pointer hover:tw-bg-[var(--chat-primary-600)]"
           style={{ background: 'var(--chat-primary)' }}
           onClick={handleSend}
+          aria-label="Send message"
         >
           Send
         </button>
