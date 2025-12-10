@@ -22,6 +22,7 @@ A React chat component with Tailwind CSS styling and Zustand state management, d
 - **Responsive Design**: Mobile-friendly with collapsible sidebar
 - **Multi-conversation Support**: Manage multiple conversation threads
 - **Rich Message Types**: Support for messages, lab results, imaging reports, and events
+- **Read-Only Mode**: Display conversations without interactive controls for viewing-only scenarios
 
 ## Project Structure
 
@@ -115,6 +116,53 @@ function TailwindPage() {
 }
 ```
 
+### Read-Only Mode
+
+Display a conversation without any interactive controls (no sidebar, compose area, or action buttons):
+
+```jsx
+import ChatComponent from '@mieweb/chat-component';
+
+function ReadOnlyConversation() {
+  const conversation = {
+    id: 735,
+    title: 'Patient Consultation',
+    open: true,
+    unread: false,
+    lastActivity: '2025-12-10 14:30',
+    thread: [
+      { 
+        type: 'message', 
+        role: 'external', 
+        senderId: 100, 
+        sender_name: 'Jane Doe', 
+        channel: 'portal', 
+        time: '2025-12-10 14:10', 
+        text: 'I have a question about my test results.' 
+      },
+      { 
+        type: 'message', 
+        role: 'internal', 
+        senderId: 200, 
+        sender_name: 'Dr. Smith', 
+        channel: 'portal', 
+        time: '2025-12-10 14:20', 
+        text: 'Your test results look great!' 
+      }
+    ]
+  };
+
+  return (
+    <ChatComponent 
+      readOnly={true}
+      conversation={conversation}
+      currentUserId={100}
+      height="400px"
+    />
+  );
+}
+```
+
 ## API Reference
 
 ### Component Props
@@ -127,6 +175,8 @@ function TailwindPage() {
 | `height` | `String` | `'500px'` | Height of the chat component |
 | `maxWidth` | `String` | `'1100px'` | Maximum width of the chat component |
 | `currentUserId` | `Number` | `null` | Integer ID of the current user viewing the component |
+| `readOnly` | `Boolean` | `false` | Enable read-only mode for displaying conversations without interactive controls |
+| `conversation` | `Object` | `null` | Conversation object to display in read-only mode |
 
 ### onMessageSent Callback
 

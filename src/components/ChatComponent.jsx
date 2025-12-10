@@ -15,7 +15,9 @@ const ChatComponent = ({
   className = '',
   height = '500px',
   maxWidth = '1100px',
-  currentUserId = null // Identifier for the current user viewing this component
+  currentUserId = null, // Identifier for the current user viewing this component
+  readOnly = false, // Enable read-only mode
+  conversation = null // Conversation object for read-only mode
 }) => {
   const [showNewDialog, setShowNewDialog] = React.useState(false);
   const [newConvTitle, setNewConvTitle] = React.useState('');
@@ -65,6 +67,43 @@ const ChatComponent = ({
       });
     }
   };
+
+  // Read-only mode rendering
+  if (readOnly && conversation) {
+    return (
+      <div 
+        className={`chat-component-root tw-flex tw-flex-col tw-overflow-hidden tw-border tw-rounded-lg ${className}`}
+        style={{ 
+          height,
+          maxWidth,
+          background: 'var(--chat-bg)',
+          borderColor: 'var(--chat-border)',
+          fontFamily: 'system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif',
+          color: 'var(--chat-text)'
+        }}
+      >
+        {/* Read-only title bar */}
+        <div 
+          className="tw-bg-white tw-border-b tw-px-3.5 tw-py-2.5"
+          style={{ borderColor: 'var(--chat-border)' }}
+        >
+          <div className="tw-font-bold">
+            {conversation.title || 'Conversation'}
+          </div>
+        </div>
+        
+        {/* Read-only message thread */}
+        <div className="tw-flex tw-flex-1 tw-overflow-hidden tw-h-full">
+          <div className="tw-flex tw-flex-col tw-flex-1 tw-bg-white tw-m-3.5 tw-rounded-lg tw-shadow-sm tw-overflow-hidden">
+            <MessageThread 
+              currentUserId={currentUserId} 
+              readOnlyConversation={conversation}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div 

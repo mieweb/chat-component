@@ -5,8 +5,25 @@ import useChatStore from '../src/store';
 
 function DemoApp() {
   const [simulatorMode, setSimulatorMode] = useState(false);
+  const [showReadOnly, setShowReadOnly] = useState(false);
   
   const exportState = useChatStore(state => state.exportState);
+
+  // Sample conversation for read-only mode
+  const readOnlyConversation = {
+    id: 999,
+    title: 'Read-Only Conversation Example',
+    open: true,
+    unread: false,
+    lastActivity: '2025-12-10 14:30',
+    thread: [
+      { type: 'message', role: 'external', senderId: 100, sender_name: 'Jane Doe', channel: 'portal', time: '2025-12-10 14:10', text: "I have a question about my recent test results." },
+      { type: 'ref', refType: 'doc', refId: 5001, title: 'Lab Results', role: 'internal', senderId: 200, channel: 'auto', time: '2025-12-10 14:15', text: 'Complete Blood Count: All values within normal limits. Reviewed by Dr. Smith.' },
+      { type: 'message', role: 'internal', senderId: 200, sender_name: 'Dr. Smith', channel: 'portal', time: '2025-12-10 14:20', text: "Your test results look great! Everything is within the normal range." },
+      { type: 'message', role: 'external', senderId: 100, sender_name: 'Jane Doe', channel: 'portal', time: '2025-12-10 14:25', text: "That's wonderful news, thank you!" },
+      { type: 'message', role: 'internal', senderId: 200, sender_name: 'Dr. Smith', channel: 'portal', time: '2025-12-10 14:30', text: "You're welcome! Let me know if you have any other questions." }
+    ]
+  };
 
   const handleMessageSent1 = (data) => {
     console.log('Component 1 (Physician) - Message sent:', data);
@@ -24,6 +41,10 @@ function DemoApp() {
 
   const toggleSimulator = () => {
     setSimulatorMode(!simulatorMode);
+  };
+
+  const toggleReadOnly = () => {
+    setShowReadOnly(!showReadOnly);
   };
 
   return (
@@ -77,6 +98,23 @@ function DemoApp() {
         >
           {simulatorMode ? '✓ Simulator Active' : 'Enable Simulator'}
         </button>
+        
+        <button 
+          type="button"
+          onClick={toggleReadOnly}
+          style={{
+            padding: '10px 20px',
+            background: showReadOnly ? '#9c27b0' : '#666',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontSize: '14px',
+            fontWeight: showReadOnly ? 'bold' : 'normal'
+          }}
+        >
+          {showReadOnly ? '✓ Read-Only Active' : 'Show Read-Only Mode'}
+        </button>
       </div>
 
       {simulatorMode && (
@@ -93,6 +131,58 @@ function DemoApp() {
             with proper alignment based on the sender's ID. This simulates a two-way conversation 
             between internal users (clinicians) and external users (patients/family).
           </p>
+        </div>
+      )}
+
+      {showReadOnly && (
+        <div style={{ 
+          marginBottom: '20px', 
+          padding: '15px', 
+          background: '#f3e5f5', 
+          borderRadius: '8px',
+          border: '2px solid #9c27b0'
+        }}>
+          <strong>📖 Read-Only Mode Active</strong>
+          <p style={{ margin: '5px 0 0 0', fontSize: '14px' }}>
+            This demonstrates the read-only mode where a conversation object is passed directly to the 
+            component. No sidebar, compose area, or interactive controls are shown - just the conversation 
+            title and messages.
+          </p>
+        </div>
+      )}
+
+      {showReadOnly && (
+        <div style={{ 
+          marginBottom: '30px',
+          border: '3px solid #9c27b0',
+          borderRadius: '12px',
+          padding: '15px'
+        }}>
+          <h3 style={{ 
+            marginTop: '0',
+            marginBottom: '15px', 
+            color: '#9c27b0',
+            fontSize: '18px'
+          }}>
+            📖 Read-Only Conversation View
+          </h3>
+          <ChatComponent 
+            readOnly={true}
+            conversation={readOnlyConversation}
+            height="400px"
+            maxWidth="100%"
+            currentUserId={100}
+          />
+          <div style={{
+            marginTop: '10px',
+            padding: '10px',
+            background: '#f8f9fa',
+            borderRadius: '6px',
+            fontSize: '13px',
+            color: '#666'
+          }}>
+            💡 Notice: No sidebar, compose area, or interactive buttons - only the conversation title and messages
+          </div>
         </div>
       )}
 
@@ -168,6 +258,7 @@ function DemoApp() {
           <li>State can be exported/imported</li>
           <li>Bootstrap-compatible (no style conflicts)</li>
           <li><strong>Simulator mode for testing two-way conversations between components</strong></li>
+          <li><strong>Read-only mode for displaying conversations without interactive controls</strong></li>
         </ul>
       </div>
     </div>

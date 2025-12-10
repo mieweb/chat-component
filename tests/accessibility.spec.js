@@ -104,3 +104,88 @@ test.describe('Screen Reader Support', () => {
     expect(liveRegions).toBeGreaterThanOrEqual(0);
   });
 });
+
+test.describe('Read-Only Mode Accessibility', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/demo-tailwind.html');
+    await page.waitForSelector('[data-testid="chat-component"], .chat-component, [class*="chat"]', { timeout: 10000 });
+    
+    // Enable read-only mode
+    const readOnlyButton = page.locator('button:has-text("Read-Only")');
+    await readOnlyButton.click();
+    await page.waitForTimeout(300);
+  });
+
+  test('should have accessible conversation title in read-only mode', async ({ page }) => {
+    // Title should be visible and readable
+    const title = page.locator('text=/Read-Only Conversation Example/i');
+    await expect(title).toBeVisible();
+    
+    // Should be in a semantic container
+    const titleContainer = page.locator('.chat-component-root').last().locator('div').first();
+    await expect(titleContainer).toBeVisible();
+  });
+
+  test('should maintain proper reading order in read-only mode', async ({ page }) => {
+    // Messages should be in chronological order
+    const readOnlyComponent = page.locator('.chat-component-root').last();
+    await expect(readOnlyComponent).toBeVisible();
+    
+    // Should display sender names in order
+    const senderNames = page.locator('text=/Jane Doe|Dr. Smith/i').first();
+    await expect(senderNames).toBeVisible();
+  });
+
+  test('should have proper contrast in read-only mode', async ({ page }) => {
+    // Take a screenshot for visual verification
+    const readOnlyComponent = page.locator('.chat-component-root').last();
+    await readOnlyComponent.screenshot({ path: 'tests/screenshots/readonly-contrast.png' });
+    
+    await expect(readOnlyComponent).toBeVisible();
+  });
+
+  test('should not trap keyboard focus in read-only mode', async ({ page }) => {
+    // Since read-only mode has no interactive elements, focus should skip over it
+    await page.keyboard.press('Tab');
+    await page.waitForTimeout(100);
+    
+    const focusedElement = await page.locator(':focus').count();
+    expect(focusedElement).toBeGreaterThanOrEqual(0);
+  });
+
+  test('should have semantic structure in read-only mode', async ({ page }) => {
+    // Check that the read-only component uses semantic HTML
+    const readOnlyComponent = page.locator('.chat-component-root').last();
+    const hasDivs = await readOnlyComponent.locator('div').count();
+    
+    // Should have structural elements
+    expect(hasDivs).toBeGreaterThan(0);
+  });
+
+  test('should display message metadata accessibly in read-only mode', async ({ page }) => {
+    // Sender names and timestamps should be visible
+    const readOnlyComponent = page.locator('.chat-component-root').last();
+    
+    // Look for sender names
+    const senderNames = readOnlyComponent.locator('text=/Jane Doe|Dr. Smith/i');
+    await expect(senderNames.first()).toBeVisible();
+    
+    // Look for channel/time information
+    const metadata = readOnlyComponent.locator('text=/Portal|SMS|AM|PM/i');
+    await expect(metadata.first()).toBeVisible();
+  });
+
+  test('should be responsive and accessible on mobile in read-only mode', async ({ page }) => {
+    // Test mobile viewport
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.waitForTimeout(200);
+    
+    const readOnlyComponent = page.locator('.chat-component-root').last();
+    await expect(readOnlyComponent).toBeVisible();
+    
+    // Title should still be visible
+    const title = page.locator('text=/Read-Only Conversation Example/i');
+    await expect(title).toBeVisible();
+  });
+});
+

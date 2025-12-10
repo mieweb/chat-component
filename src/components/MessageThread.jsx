@@ -81,18 +81,21 @@ const MessageItem = ({ item, currentUserId }) => {
   return null;
 };
 
-const MessageThread = ({ currentUserId = null }) => {
+const MessageThread = ({ currentUserId = null, readOnlyConversation = null }) => {
   const activeConversation = useChatStore(state => state.getActiveConversation());
   const threadRef = useRef(null);
+
+  // Use readOnlyConversation if provided, otherwise use activeConversation from store
+  const conversation = readOnlyConversation || activeConversation;
 
   // Auto-scroll to bottom when conversation changes or new messages arrive
   useEffect(() => {
     if (threadRef.current) {
       threadRef.current.scrollTop = threadRef.current.scrollHeight;
     }
-  }, [activeConversation?.thread]);
+  }, [conversation?.thread]);
 
-  if (!activeConversation) {
+  if (!conversation) {
     return (
       <div className="tw-flex-1 tw-p-4 tw-overflow-y-auto tw-flex tw-items-center tw-justify-center tw-text-[var(--chat-muted)]">
         No conversation selected
@@ -100,7 +103,7 @@ const MessageThread = ({ currentUserId = null }) => {
     );
   }
 
-  const sortedThread = [...activeConversation.thread].sort((a, b) => 
+  const sortedThread = [...conversation.thread].sort((a, b) => 
     a.time < b.time ? -1 : 1
   );
 
