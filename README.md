@@ -1,5 +1,8 @@
 # Chat Component
 
+Demo site: https://chat-component.opensource.mieweb.org/
+
+
 Video demo: https://youtube.com/shorts/oBetyZPDVvg
 
 https://pm.mieweb.com/issues/144868
