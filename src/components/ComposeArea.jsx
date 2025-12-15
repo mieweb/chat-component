@@ -1,13 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import useChatStore from '../store';
 
-const ComposeArea = ({ onMessageSent, currentUserId = null }) => {
+const ComposeArea = ({ onMessageSent, currentUserId = null, activeConversation, disableClosedConversations = false }) => {
   const [text, setText] = useState('');
   const [sendType, setSendType] = useState('auto');
   const textareaRef = useRef(null);
-  
-  const activeConversation = useChatStore(state => state.getActiveConversation());
+
   const addMessage = useChatStore(state => state.addMessage);
+
+  const isClosed = disableClosedConversations && activeConversation?.status === 'closed';
 
   // Auto-grow textarea
   useEffect(() => {
@@ -26,7 +27,7 @@ const ComposeArea = ({ onMessageSent, currentUserId = null }) => {
   }, []);
 
   const handleSend = () => {
-    if (!activeConversation || !text.trim()) return;
+    if (!text.trim() || isClosed) return;
 
     const message = {
       text: text.trim(),
@@ -35,7 +36,7 @@ const ComposeArea = ({ onMessageSent, currentUserId = null }) => {
     };
 
     const newMessage = addMessage(message);
-    
+
     // Call the callback if provided
     if (onMessageSent && newMessage) {
       onMessageSent({
@@ -50,7 +51,9 @@ const ComposeArea = ({ onMessageSent, currentUserId = null }) => {
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      handleSend();
+      if (!isClosed) {
+        handleSend();
+      }
     }
   };
 
@@ -63,12 +66,13 @@ const ComposeArea = ({ onMessageSent, currentUserId = null }) => {
         ref={textareaRef}
         className="tw-w-full tw-max-h-[320px] tw-resize-none tw-border tw-rounded-lg tw-px-3 tw-py-2.5 tw-text-[15px] tw-leading-[1.4] tw-outline-none focus:tw-border-[var(--chat-primary)] focus:tw-shadow-[0_0_0_2px_rgba(25,118,210,0.13)] tw-overflow-y-auto"
         style={{ borderColor: 'var(--chat-border)' }}
-        placeholder="Type your message... Shift+Enter for newline, Enter to send."
+        placeholder={isClosed ? "This conversation is closed" : "Type your message... Shift+Enter for newline, Enter to send."}
         value={text}
         onChange={(e) => setText(e.target.value)}
         onKeyDown={handleKeyDown}
         rows={1}
         aria-label="Message text"
+        disabled={isClosed}
       />
       
       <div className="tw-flex tw-items-center tw-gap-2.5 tw-flex-wrap">
@@ -78,6 +82,7 @@ const ComposeArea = ({ onMessageSent, currentUserId = null }) => {
           value={sendType}
           onChange={(e) => setSendType(e.target.value)}
           aria-label="Delivery method"
+          disabled={isClosed}
         >
           <option value="auto">Automatic</option>
           <option value="portal">Portal Message</option>
@@ -98,6 +103,7 @@ const ComposeArea = ({ onMessageSent, currentUserId = null }) => {
           style={{ background: 'var(--chat-primary)' }}
           onClick={handleSend}
           aria-label="Send message"
+          disabled={!text.trim() || isClosed}
         >
           Send
         </button>

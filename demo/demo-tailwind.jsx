@@ -2,12 +2,19 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import ChatComponent from '../src/chat-component-embed';
 import useChatStore from '../src/store';
+import { getDemoInitialState } from '../src/sample-data';
 
 function DemoApp() {
   const [simulatorMode, setSimulatorMode] = useState(false);
   const [showReadOnly, setShowReadOnly] = useState(false);
   
   const exportState = useChatStore(state => state.exportState);
+
+  // Load sample data on mount for demo purposes
+  useEffect(() => {
+    const demoData = getDemoInitialState();
+    useChatStore.getState().loadConversations(demoData);
+  }, []);
 
   // Sample conversation for read-only mode
   const readOnlyConversation = {

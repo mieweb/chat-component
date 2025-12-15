@@ -1,7 +1,7 @@
 import React from 'react';
 import useChatStore from '../store';
 
-const TopBar = () => {
+const TopBar = ({ hideToggleButton = false }) => {
   const activeConversation = useChatStore(state => state.getActiveConversation());
   const toggleConversationStatus = useChatStore(state => state.toggleConversationStatus);
   const markAsUnread = useChatStore(state => state.markAsUnread);
@@ -20,22 +20,28 @@ const TopBar = () => {
   };
 
   return (
-    <div 
-      className="tw-bg-white tw-border-b tw-flex tw-items-center tw-gap-2.5 tw-px-3.5 tw-py-2.5"
+    <header 
+      className="tw-bg-white tw-border-b tw-px-3.5 tw-py-2.5 tw-flex tw-items-center tw-justify-between"
       style={{ borderColor: 'var(--chat-border)' }}
     >
-      <button
-        type="button"
-        className="tw-hidden max-[900px]:tw-inline-flex tw-items-center tw-justify-center tw-w-9 tw-h-9 tw-border tw-rounded-lg tw-bg-white tw-cursor-pointer"
-        onClick={toggleSidebar}
-        aria-label="Open conversations"
-        style={{ borderColor: 'var(--chat-border)' }}
-      >
-        ☰
-      </button>
-      
-      <div className="tw-font-bold tw-flex-1">
-        {activeConversation?.title || 'Clinical Timeline'}
+      <div className="tw-flex tw-items-center tw-gap-2">
+        {!hideToggleButton && (
+          <button
+            className="tw-border-none tw-bg-transparent tw-cursor-pointer tw-p-1.5 tw-rounded-md hover:tw-bg-gray-100 tw-transition-colors"
+            onClick={toggleSidebar}
+            aria-label="Open conversations"
+            title="Open conversations"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+        )}
+        <div className="tw-font-bold">
+          {activeConversation?.title || 'Clinical Timeline'}
+        </div>
       </div>
       
       <div className="tw-flex tw-gap-2 tw-items-center">
@@ -74,7 +80,7 @@ const TopBar = () => {
           Mark Unread
         </button>
       </div>
-    </div>
+    </header>
   );
 };
 

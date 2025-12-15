@@ -86,3 +86,36 @@ All tests follow Playwright's best practices:
 ## Screenshots
 
 The `screenshots/` directory stores screenshots taken during accessibility tests for manual verification of visual aspects like contrast ratios and focus indicators.
+
+## Test Coverage
+
+### Component Tests
+
+#### ChatComponent
+- ✅ Renders with default props
+- ✅ Loads initial data correctly
+- ✅ Sets initial active conversation
+- ✅ Syncs currentUserId with store
+- ✅ Triggers onMessageSent callback
+- ✅ Triggers onConversationOpened callback
+- ✅ Triggers onConversationCreated callback
+- ✅ Renders in read-only mode
+- ✅ Hides New button when hideNewButton is true
+- ✅ Hides toggle button when hideToggleButton is true
+- ✅ Disables compose area for closed conversations when disableClosedConversations is true
+
+## Running Specific Tests
+
+```bash
+# Test callbacks
+npm test -- --grep "callbacks"
+
+# Test read-only mode
+npm test -- --grep "read-only"
+
+# Test UI controls
+npm test -- --grep "hideNewButton|hideToggleButton"
+
+# Test closed conversation behavior
+npm test -- --grep "disableClosedConversations"
+```

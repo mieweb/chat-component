@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import useChatStore, { formatTime } from '../store';
 
-const ConversationList = ({ onConversationOpened = null, onNewConversationClick = null }) => {
+const ConversationList = ({ onConversationOpened = null, onNewConversationClick = null, hideNewButton = false }) => {
   const conversations = useChatStore(state => state.conversations);
   const activeConversationId = useChatStore(state => state.activeConversationId);
   const setActiveConversation = useChatStore(state => state.setActiveConversation);
@@ -28,21 +28,23 @@ const ConversationList = ({ onConversationOpened = null, onNewConversationClick 
     .sort((a, b) => (a.lastActivity < b.lastActivity ? 1 : -1));
 
   return (
-    <>
+    <div className="tw-flex tw-flex-col tw-h-full">
       <div 
         className="tw-flex tw-items-center tw-justify-between tw-px-4 tw-py-3.5 tw-border-b tw-font-semibold"
         style={{ borderColor: 'var(--chat-border)' }}
       >
         <span>Conversations</span>
-        <button
-          type="button"
-          className="tw-px-2.5 tw-py-2 tw-rounded-lg tw-border-none tw-text-white tw-cursor-pointer"
-          style={{ background: 'var(--chat-primary)' }}
-          onClick={onNewConversationClick}
-          aria-label="Create new conversation"
-        >
-          + New
-        </button>
+        {!hideNewButton && (
+          <button
+            type="button"
+            className="tw-px-2.5 tw-py-2 tw-rounded-lg tw-border-none tw-text-white tw-cursor-pointer"
+            style={{ background: 'var(--chat-primary)' }}
+            onClick={onNewConversationClick}
+            aria-label="Create new conversation"
+          >
+            + New
+          </button>
+        )}
       </div>
 
       <div 
@@ -107,7 +109,7 @@ const ConversationList = ({ onConversationOpened = null, onNewConversationClick 
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 };
 

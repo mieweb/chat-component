@@ -177,6 +177,12 @@ function ReadOnlyConversation() {
 | `currentUserId` | `Number` | `null` | Integer ID of the current user viewing the component |
 | `readOnly` | `Boolean` | `false` | Enable read-only mode for displaying conversations without interactive controls |
 | `conversation` | `Object` | `null` | Conversation object to display in read-only mode |
+| `initialActiveConversationId` | `number` | `null` | ID of the conversation to show on mount |
+| `onConversationOpened` | `Function` | `null` | Callback when a conversation is selected. Receives `{ conversationId, conversation }` |
+| `onConversationCreated` | `Function` | `null` | Callback when a new conversation is created. Receives `{ conversationId, conversation }` |
+| `hideNewButton` | `boolean` | `false` | Hide the "New Conversation" button in the conversation list |
+| `hideToggleButton` | `boolean` | `false` | Hide the sidebar toggle button in the top bar |
+| `disableClosedConversations` | `boolean` | `false` | When `true`, disables the compose area when a conversation's status is 'closed' |
 
 ### onMessageSent Callback
 
@@ -193,6 +199,39 @@ The `onMessageSent` callback receives an object with:
     text: 'Message text'
   }
 }
+```
+
+### Callback Details
+
+#### onMessageSent
+Called when a user sends a message.
+
+```javascript
+onMessageSent={({ conversationId, message }) => {
+  console.log('Message sent:', message);
+  console.log('In conversation:', conversationId);
+  // message includes: id, text, timestamp, senderId, channel
+}}
+```
+
+#### onConversationOpened
+Called when a user selects/opens a conversation.
+
+```javascript
+onConversationOpened={({ conversationId, conversation }) => {
+  console.log('Opened conversation:', conversationId);
+  console.log('Conversation data:', conversation);
+}}
+```
+
+#### onConversationCreated
+Called when a new conversation is created.
+
+```javascript
+onConversationCreated={({ conversationId, conversation }) => {
+  console.log('Created conversation:', conversationId);
+  console.log('Conversation data:', conversation);
+}}
 ```
 
 ## State Management
