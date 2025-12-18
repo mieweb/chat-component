@@ -7,6 +7,7 @@ import { getDemoInitialState } from '../src/sample-data';
 function DemoApp() {
   const [simulatorMode, setSimulatorMode] = useState(false);
   const [showReadOnly, setShowReadOnly] = useState(false);
+  const [customLinks, setCustomLinks] = useState(false);
   
   const exportState = useChatStore(state => state.exportState);
 
@@ -53,6 +54,26 @@ function DemoApp() {
   const toggleReadOnly = () => {
     setShowReadOnly(!showReadOnly);
   };
+
+  const toggleCustomLinks = () => {
+    setCustomLinks(!customLinks);
+  };
+
+  // Custom link builder for demo
+  const customLinkBuilder = customLinks ? (refType, refId, item) => {
+    switch(refType) {
+      case 'doc':
+        return `/documents/${refId}?title=${encodeURIComponent(item.title || 'Document')}`;
+      case 'rx':
+        return `/prescriptions/${refId}`;
+      case 'appt':
+        return `/appointments/${refId}`;
+      case 'conversation':
+        return `/conversations/${refId}`;
+      default:
+        return `#${refType}/${refId}`;
+    }
+  } : null;
 
   return (
     <div style={{ padding: '20px', fontFamily: 'system-ui', maxWidth: '1400px', margin: '0 auto' }}>
@@ -122,6 +143,23 @@ function DemoApp() {
         >
           {showReadOnly ? '✓ Read-Only Active' : 'Show Read-Only Mode'}
         </button>
+        
+        <button 
+          type="button"
+          onClick={toggleCustomLinks}
+          style={{
+            padding: '10px 20px',
+            background: customLinks ? '#ff9800' : '#666',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontSize: '14px',
+            fontWeight: customLinks ? 'bold' : 'normal'
+          }}
+        >
+          {customLinks ? '✓ Custom Links Active' : 'Enable Custom Links'}
+        </button>
       </div>
 
       {simulatorMode && (
@@ -158,6 +196,22 @@ function DemoApp() {
         </div>
       )}
 
+      {customLinks && (
+        <div style={{ 
+          marginBottom: '20px', 
+          padding: '15px', 
+          background: '#fff3e0', 
+          borderRadius: '8px',
+          border: '2px solid #ff9800'
+        }}>
+          <strong>🔗 Custom Link Builder Active</strong>
+          <p style={{ margin: '5px 0 0 0', fontSize: '14px' }}>
+            Document, prescription, appointment, and conversation links are now generated using a custom linkBuilder function.
+            Click on any reference links in messages or the right arrow buttons in the conversation list to see the custom URLs in your browser's status bar.
+          </p>
+        </div>
+      )}
+
       {showReadOnly && (
         <div style={{ 
           marginBottom: '30px',
@@ -179,6 +233,7 @@ function DemoApp() {
             height="400px"
             maxWidth="100%"
             currentUserId={100}
+            linkBuilder={customLinkBuilder}
           />
           <div style={{
             marginTop: '10px',
@@ -219,6 +274,7 @@ function DemoApp() {
             height="500px"
             maxWidth="100%"
             currentUserId={200}
+            linkBuilder={customLinkBuilder}
           />
         </div>
         
@@ -241,6 +297,7 @@ function DemoApp() {
               height="500px"
               maxWidth="100%"
               currentUserId={100}
+              linkBuilder={customLinkBuilder}
             />
             <div style={{
               marginTop: '10px',
@@ -266,6 +323,7 @@ function DemoApp() {
           <li>Bootstrap-compatible (no style conflicts)</li>
           <li><strong>Simulator mode for testing two-way conversations between components</strong></li>
           <li><strong>Read-only mode for displaying conversations without interactive controls</strong></li>
+          <li><strong>Custom link builder for generating reference links (documents, prescriptions, etc.)</strong></li>
         </ul>
       </div>
     </div>

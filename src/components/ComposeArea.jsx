@@ -8,7 +8,8 @@ const ComposeArea = ({ onMessageSent, currentUserId = null, activeConversation, 
 
   const addMessage = useChatStore(state => state.addMessage);
 
-  const isClosed = disableClosedConversations && activeConversation?.status === 'closed';
+  // Fix: Use 'open' property instead of 'status', and add null check
+  const isClosed = disableClosedConversations && activeConversation && !activeConversation.open;
 
   // Auto-grow textarea
   useEffect(() => {
@@ -27,7 +28,7 @@ const ComposeArea = ({ onMessageSent, currentUserId = null, activeConversation, 
   }, []);
 
   const handleSend = () => {
-    if (!text.trim() || isClosed) return;
+    if (!text.trim() || isClosed || !activeConversation) return;
 
     const message = {
       text: text.trim(),
@@ -64,7 +65,11 @@ const ComposeArea = ({ onMessageSent, currentUserId = null, activeConversation, 
     >
       <textarea
         ref={textareaRef}
-        className="tw-w-full tw-max-h-[320px] tw-resize-none tw-border tw-rounded-lg tw-px-3 tw-py-2.5 tw-text-[15px] tw-leading-[1.4] tw-outline-none focus:tw-border-[var(--chat-primary)] focus:tw-shadow-[0_0_0_2px_rgba(25,118,210,0.13)] tw-overflow-y-auto"
+        className={`tw-w-full tw-max-h-[320px] tw-resize-none tw-border tw-rounded-lg tw-px-3 tw-py-2.5 tw-text-[15px] tw-leading-[1.4] tw-outline-none tw-overflow-y-auto ${
+          isClosed 
+            ? 'tw-bg-gray-100 tw-cursor-not-allowed tw-text-gray-500' 
+            : 'focus:tw-border-[var(--chat-primary)] focus:tw-shadow-[0_0_0_2px_rgba(25,118,210,0.13)]'
+        }`}
         style={{ borderColor: 'var(--chat-border)' }}
         placeholder={isClosed ? "This conversation is closed" : "Type your message... Shift+Enter for newline, Enter to send."}
         value={text}
@@ -77,7 +82,9 @@ const ComposeArea = ({ onMessageSent, currentUserId = null, activeConversation, 
       
       <div className="tw-flex tw-items-center tw-gap-2.5 tw-flex-wrap">
         <select
-          className="tw-rounded-lg tw-px-2.5 tw-py-2 tw-border tw-text-sm"
+          className={`tw-rounded-lg tw-px-2.5 tw-py-2 tw-border tw-text-sm ${
+            isClosed ? 'tw-bg-gray-100 tw-cursor-not-allowed tw-text-gray-500' : ''
+          }`}
           style={{ borderColor: 'var(--chat-border)' }}
           value={sendType}
           onChange={(e) => setSendType(e.target.value)}
@@ -99,8 +106,12 @@ const ComposeArea = ({ onMessageSent, currentUserId = null, activeConversation, 
         
         <button
           type="button"
-          className="tw-text-white tw-border-none tw-rounded-lg tw-px-4 tw-py-2.5 tw-text-[15px] tw-cursor-pointer hover:tw-bg-[var(--chat-primary-600)]"
-          style={{ background: 'var(--chat-primary)' }}
+          className={`tw-border-none tw-rounded-lg tw-px-4 tw-py-2.5 tw-text-[15px] ${
+            !text.trim() || isClosed
+              ? 'tw-bg-gray-300 tw-text-gray-500 tw-cursor-not-allowed'
+              : 'tw-text-white tw-cursor-pointer hover:tw-bg-[var(--chat-primary-600)]'
+          }`}
+          style={{ background: !text.trim() || isClosed ? undefined : 'var(--chat-primary)' }}
           onClick={handleSend}
           aria-label="Send message"
           disabled={!text.trim() || isClosed}

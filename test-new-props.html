@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test New Properties</title>
+    
+    <!-- Chat Component CSS -->
+    <link rel="stylesheet" href="./dist/chat-component.css">
+    
+    <style>
+        body {
+            font-family: system-ui;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            margin-bottom: 40px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .description {
+            background: #e3f2fd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        .component-wrapper {
+            border: 2px dashed #ccc;
+            border-radius: 4px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test New Properties</h1>
+    
+    <div class="test-section">
+        <h2>1. Default Component (All buttons visible)</h2>
+        <div class="description">
+            ✅ Should show: "New Conversation" button in sidebar, toggle button in top bar, compose area enabled
+        </div>
+        <div id="component1" class="component-wrapper"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. hideNewButton = true</h2>
+        <div class="description">
+            ✅ Should hide: "New Conversation" button in sidebar<br>
+            ❌ Should NOT hide: Toggle button, compose area
+        </div>
+        <div id="component2" class="component-wrapper"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. hideStatusToggle = true</h2>
+        <div class="description">
+            ✅ Should hide: "Toggle" button (for conversation status) in top bar<br>
+            ❌ Should NOT hide: "New Conversation" button, hamburger menu, compose area
+        </div>
+        <div id="component3" class="component-wrapper"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. disableClosedConversations = true (Select Closed Conversation)</h2>
+        <div class="description">
+            ✅ When "Refill Request" (closed) is selected: Compose area should be disabled with message "This conversation is closed"<br>
+            ✅ When an open conversation is selected: Compose area should work normally
+        </div>
+        <div id="component4" class="component-wrapper"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>5. All hide props = true</h2>
+        <div class="description">
+            ✅ Should hide: "New Conversation" button, hamburger menu, AND status toggle button
+        </div>
+        <div id="component5" class="component-wrapper"></div>
+    </div>
+
+    <!-- Chat Component UMD Bundle (includes React 19) -->
+    <script src="./dist/chat-component.umd.js"></script>
+
+    <script>
+        // Get React and ReactDOM from the ChatComponent bundle
+        const { React, ReactDOM } = ChatComponent;
+        
+        // Sample data for testing
+        const sampleData = {
+            conversations: [
+                {
+                    id: 1,
+                    title: 'Open Conversation',
+                    open: true,
+                    unread: false,
+                    lastActivity: '2025-12-15 14:30',
+                    thread: [
+                        { type: 'message', role: 'external', senderId: 100, sender_name: 'Jane Doe', channel: 'portal', time: '2025-12-15 14:10', text: 'This is an open conversation.' }
+                    ]
+                },
+                {
+                    id: 2,
+                    title: 'Closed Conversation - Refill Request',
+                    open: false,
+                    unread: false,
+                    lastActivity: '2025-12-14 11:05',
+                    thread: [
+                        { type: 'message', role: 'external', senderId: 100, sender_name: 'Jane Doe', channel: 'sms', time: '2025-12-14 10:02', text: 'I need a refill.' },
+                        { type: 'message', role: 'internal', senderId: 200, sender_name: 'Dr. Smith', channel: 'auto', time: '2025-12-14 11:05', text: 'Refill sent.' }
+                    ]
+                }
+            ],
+            activeConversationId: 1,
+            currentUserId: 200
+        };
+
+        // Load sample data
+        ChatComponent.useChatStore.getState().loadConversations(sampleData);
+
+        // Component 1: Default
+        ReactDOM.createRoot(document.getElementById('component1')).render(
+            React.createElement(ChatComponent.default, {
+                height: '400px',
+                maxWidth: '100%',
+                currentUserId: 200
+            })
+        );
+
+        // Component 2: hideNewButton
+        ReactDOM.createRoot(document.getElementById('component2')).render(
+            React.createElement(ChatComponent.default, {
+                height: '400px',
+                maxWidth: '100%',
+                currentUserId: 200,
+                hideNewButton: true
+            })
+        );
+
+        // Component 3: hideStatusToggle
+        ReactDOM.createRoot(document.getElementById('component3')).render(
+            React.createElement(ChatComponent.default, {
+                height: '400px',
+                maxWidth: '100%',
+                currentUserId: 200,
+                hideStatusToggle: true
+            })
+        );
+
+        // Component 4: disableClosedConversations - start with closed conv selected
+        ReactDOM.createRoot(document.getElementById('component4')).render(
+            React.createElement(ChatComponent.default, {
+                height: '400px',
+                maxWidth: '100%',
+                currentUserId: 200,
+                disableClosedConversations: true,
+                initialActiveConversationId: 2 // Start with closed conversation
+            })
+        );
+
+        // Component 5: All hide props
+        ReactDOM.createRoot(document.getElementById('component5')).render(
+            React.createElement(ChatComponent.default, {
+                height: '400px',
+                maxWidth: '100%',
+                currentUserId: 200,
+                hideNewButton: true,
+                hideToggleButton: true,
+                hideStatusToggle: true
+            })
+        );
+    </script>
+</body>
+</html>

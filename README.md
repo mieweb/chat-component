@@ -163,6 +163,37 @@ function ReadOnlyConversation() {
 }
 ```
 
+### Custom Link Builder
+
+Customize how reference links (documents, prescriptions, appointments) are generated:
+
+```jsx
+import ChatComponent from '@mieweb/chat-component';
+
+function CustomLinksExample() {
+  const buildLink = (refType, refId, item) => {
+    // Build URLs based on your application's routing structure
+    switch(refType) {
+      case 'doc':
+        return `/patient/documents/${refId}`;
+      case 'rx':
+        return `/patient/prescriptions/${refId}`;
+      case 'appt':
+        return `/patient/appointments/${refId}`;
+      default:
+        return `#${refType}/${refId}`;
+    }
+  };
+
+  return (
+    <ChatComponent 
+      linkBuilder={buildLink}
+      height="500px"
+    />
+  );
+}
+```
+
 ## API Reference
 
 ### Component Props
@@ -183,6 +214,36 @@ function ReadOnlyConversation() {
 | `hideNewButton` | `boolean` | `false` | Hide the "New Conversation" button in the conversation list |
 | `hideToggleButton` | `boolean` | `false` | Hide the sidebar toggle button in the top bar |
 | `disableClosedConversations` | `boolean` | `false` | When `true`, disables the compose area when a conversation's status is 'closed' |
+| `linkBuilder` | `Function` | `null` | Custom function to build reference links. Receives `(refType, refId, item)` and returns a URL string |
+
+### linkBuilder Function
+
+The `linkBuilder` prop allows you to customize how links are generated for attached documents, prescriptions, appointments, and other references in messages, as well as for conversations in the conversation list. If not provided, the default format `#${refType}/${refId}` is used for references, and no link button appears for conversations.
+
+```javascript
+// Example: Custom link builder
+linkBuilder={(refType, refId, item) => {
+  switch(refType) {
+    case 'doc':
+      return `/documents/${refId}`;
+    case 'rx':
+      return `/prescriptions/${refId}`;
+    case 'appt':
+      return `/appointments/${refId}`;
+    case 'conversation':
+      return `/conversations/${refId}`;
+    default:
+      return `#${refType}/${refId}`;
+  }
+}}
+```
+
+The function receives:
+- `refType`: Type of reference (e.g., 'doc', 'rx', 'appt', 'conversation')
+- `refId`: Unique identifier for the reference or conversation
+- `item`: Complete item object containing all data (for messages: title, text, time, channel, etc.; for conversations: the entire conversation object)
+
+When `linkBuilder` is provided and returns a URL for the 'conversation' refType, a right arrow button will appear on each conversation in the conversation list, allowing users to navigate to the conversation's detail page.
 
 ### onMessageSent Callback
 

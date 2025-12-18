@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import useChatStore, { channelIcon, channelLabel } from '../store';
 
-const MessageItem = ({ item, currentUserId }) => {
+const MessageItem = ({ item, currentUserId, linkBuilder }) => {
   const time = new Date(item.time.replace(' ', 'T')).toLocaleTimeString([], {
     hour: '2-digit',
     minute: '2-digit'
@@ -45,6 +45,11 @@ const MessageItem = ({ item, currentUserId }) => {
     };
     
     const config = refConfig[item.refType] || { icon: '📎', label: 'Reference', borderColor: '#64b5f6' };
+    
+    // Build link using custom linkBuilder or default format
+    const linkHref = item.refId 
+      ? (linkBuilder ? linkBuilder(item.refType, item.refId, item) : `#${item.refType}/${item.refId}`)
+      : null;
 
     return (
       <div className="tw-mb-5 tw-flex tw-flex-col tw-items-center">
@@ -57,9 +62,9 @@ const MessageItem = ({ item, currentUserId }) => {
             {item.title && (
               <span>{item.title}</span>
             )}
-            {item.refId && (
+            {linkHref && (
               <a 
-                href={`#${item.refType}/${item.refId}`}
+                href={linkHref}
                 className="tw-text-xs tw-underline"
                 style={{ color: 'var(--chat-primary)' }}
               >
@@ -81,7 +86,7 @@ const MessageItem = ({ item, currentUserId }) => {
   return null;
 };
 
-const MessageThread = ({ currentUserId = null, readOnlyConversation = null }) => {
+const MessageThread = ({ currentUserId = null, readOnlyConversation = null, linkBuilder = null }) => {
   const activeConversation = useChatStore(state => state.getActiveConversation());
   const threadRef = useRef(null);
 
@@ -113,7 +118,7 @@ const MessageThread = ({ currentUserId = null, readOnlyConversation = null }) =>
       className="tw-flex-1 tw-p-4 tw-overflow-y-auto"
     >
       {sortedThread.map((item, index) => (
-        <MessageItem key={index} item={item} currentUserId={currentUserId} />
+        <MessageItem key={index} item={item} currentUserId={currentUserId} linkBuilder={linkBuilder} />
       ))}
     </div>
   );

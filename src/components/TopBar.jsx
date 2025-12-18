@@ -1,7 +1,7 @@
 import React from 'react';
 import useChatStore from '../store';
 
-const TopBar = ({ hideToggleButton = false }) => {
+const TopBar = ({ hideToggleButton = false, hideStatusToggle = false }) => {
   const activeConversation = useChatStore(state => state.getActiveConversation());
   const toggleConversationStatus = useChatStore(state => state.toggleConversationStatus);
   const markAsUnread = useChatStore(state => state.markAsUnread);
@@ -58,16 +58,18 @@ const TopBar = ({ hideToggleButton = false }) => {
           {activeConversation?.open ? 'Open' : 'Closed'}
         </span>
         
-        <button
-          type="button"
-          className="tw-px-2.5 tw-py-1.5 tw-rounded-lg tw-border tw-bg-white tw-cursor-pointer tw-text-sm"
-          onClick={handleToggleStatus}
-          title="Toggle Open/Closed"
-          aria-label="Toggle conversation status"
-          style={{ borderColor: 'var(--chat-border)' }}
-        >
-          Toggle
-        </button>
+        {!hideStatusToggle && (
+          <button
+            type="button"
+            className="tw-px-2.5 tw-py-1.5 tw-rounded-lg tw-border tw-bg-white tw-cursor-pointer tw-text-sm"
+            onClick={handleToggleStatus}
+            title="Toggle Open/Closed"
+            aria-label="Toggle conversation status"
+            style={{ borderColor: 'var(--chat-border)' }}
+          >
+            Toggle
+          </button>
+        )}
         
         <button
           type="button"

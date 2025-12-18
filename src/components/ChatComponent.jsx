@@ -20,7 +20,9 @@ const ChatComponent = ({
   conversation = null, // Conversation object for read-only mode
   hideNewButton = false, // Hide the New Conversation button
   hideToggleButton = false, // Hide the sidebar toggle button
-  disableClosedConversations = false // Disable compose area when conversation status is closed
+  hideStatusToggle = false, // Hide the conversation status toggle button
+  disableClosedConversations = false, // Disable compose area when conversation status is closed
+  linkBuilder = null // Function to build custom links: (refType, refId, item) => string
 }) => {
   const [showNewDialog, setShowNewDialog] = React.useState(false);
   const [newConvTitle, setNewConvTitle] = React.useState('');
@@ -32,7 +34,7 @@ const ChatComponent = ({
   const setCurrentUserId = useChatStore(state => state.setCurrentUserId);
   const storedCurrentUserId = useChatStore(state => state.currentUserId);
   const setActiveConversation = useChatStore(state => state.setActiveConversation);
-  const activeConversation = useChatStore(state => state.activeConversation);
+  const activeConversation = useChatStore(state => state.getActiveConversation());
 
   // Sync currentUserId prop with store
   React.useEffect(() => {
@@ -102,6 +104,7 @@ const ChatComponent = ({
             <MessageThread 
               currentUserId={currentUserId} 
               readOnlyConversation={conversation}
+              linkBuilder={linkBuilder}
             />
           </div>
         </div>
@@ -138,6 +141,7 @@ const ChatComponent = ({
           onConversationOpened={onConversationOpened}
           onNewConversationClick={() => setShowNewDialog(true)}
           hideNewButton={hideNewButton}
+          linkBuilder={linkBuilder}
         />
       </aside>
 
@@ -151,11 +155,14 @@ const ChatComponent = ({
 
       {/* Main content */}
       <main className="tw-flex tw-flex-col tw-flex-1 tw-h-full">
-        <TopBar hideToggleButton={hideToggleButton} />
+        <TopBar hideToggleButton={hideToggleButton} hideStatusToggle={hideStatusToggle} />
         
         <div className="tw-flex tw-flex-1 tw-overflow-hidden tw-h-full">
           <div className="tw-flex tw-flex-col tw-flex-1 tw-bg-white tw-m-3.5 tw-rounded-lg tw-shadow-sm tw-overflow-hidden">
-            <MessageThread currentUserId={storedCurrentUserId} />
+            <MessageThread 
+              currentUserId={storedCurrentUserId} 
+              linkBuilder={linkBuilder}
+            />
             <ComposeArea 
               onMessageSent={onMessageSent} 
               currentUserId={storedCurrentUserId}
