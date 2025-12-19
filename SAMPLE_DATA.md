@@ -69,6 +69,23 @@ useChatStore.getState().loadConversations({
 />
 ```
 
+### Creating New Conversations with reference_id
+
+When creating new conversations, you can optionally provide a `reference_id` to link to external systems:
+
+```javascript
+const newConversation = useChatStore.getState().createConversation(
+  'Patient Follow-up',
+  'CASE-2025-123'  // optional reference_id
+);
+```
+
+The `reference_id` field is useful for:
+- Linking conversations to external case management systems
+- Tracking related documents or appointments
+- Integration with third-party systems
+- Maintaining cross-reference identifiers
+
 ## Benefits
 
 - **Clean embeddings**: No demo data pollutes production applications

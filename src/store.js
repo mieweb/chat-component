@@ -116,7 +116,7 @@ const useChatStore = create((set, get) => ({
   },
 
   // Create new conversation
-  createConversation: (title) => {
+  createConversation: (title, reference_id = null) => {
     const now = new Date().toISOString().slice(0, 16).replace('T', ' ');
     // Generate a random integer ID (in production this would come from database AUTO_INCREMENT)
     const id = Math.floor(Math.random() * 1000000) + 1000;
@@ -124,6 +124,7 @@ const useChatStore = create((set, get) => ({
     const newConversation = {
       id,
       title: title || 'New Conversation',
+      reference_id: reference_id,
       open: true,
       unread: false,
       lastActivity: now,
@@ -209,6 +210,7 @@ const useChatStore = create((set, get) => ({
     const conversations = conversationsList.map(conv => ({
       id: parseInt(conv.id, 10),
       title: conv.title,
+      reference_id: conv.reference_id,
       open: conv.open ?? true,
       unread: conv.unread ?? false,
       lastActivity: conv.lastActivity,

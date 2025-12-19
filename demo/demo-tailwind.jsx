@@ -21,6 +21,7 @@ function DemoApp() {
   const readOnlyConversation = {
     id: 999,
     title: 'Read-Only Conversation Example',
+    reference_id: 'DEMO-READ-ONLY',
     open: true,
     unread: false,
     lastActivity: '2025-12-10 14:30',

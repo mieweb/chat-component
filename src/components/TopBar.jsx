@@ -1,7 +1,12 @@
 import React from 'react';
 import useChatStore from '../store';
 
-const TopBar = ({ hideToggleButton = false, hideStatusToggle = false }) => {
+const TopBar = ({ 
+  hideToggleButton = false, 
+  hideStatusToggle = false,
+  showCloseButton = false,
+  onConversationClosed = null
+}) => {
   const activeConversation = useChatStore(state => state.getActiveConversation());
   const toggleConversationStatus = useChatStore(state => state.toggleConversationStatus);
   const markAsUnread = useChatStore(state => state.markAsUnread);
@@ -10,6 +15,15 @@ const TopBar = ({ hideToggleButton = false, hideStatusToggle = false }) => {
   const handleToggleStatus = () => {
     if (activeConversation) {
       toggleConversationStatus(activeConversation.id);
+    }
+  };
+
+  const handleCloseConversation = () => {
+    if (activeConversation && onConversationClosed) {
+      onConversationClosed({
+        conversationId: activeConversation.id,
+        conversation: activeConversation
+      });
     }
   };
 
@@ -27,6 +41,7 @@ const TopBar = ({ hideToggleButton = false, hideStatusToggle = false }) => {
       <div className="tw-flex tw-items-center tw-gap-2">
         {!hideToggleButton && (
           <button
+            type="button"
             className="tw-border-none tw-bg-transparent tw-cursor-pointer tw-p-1.5 tw-rounded-md hover:tw-bg-gray-100 tw-transition-colors"
             onClick={toggleSidebar}
             aria-label="Open conversations"
@@ -58,17 +73,29 @@ const TopBar = ({ hideToggleButton = false, hideStatusToggle = false }) => {
           {activeConversation?.open ? 'Open' : 'Closed'}
         </span>
         
-        {!hideStatusToggle && (
+        {showCloseButton && activeConversation?.open ? (
           <button
             type="button"
-            className="tw-px-2.5 tw-py-1.5 tw-rounded-lg tw-border tw-bg-white tw-cursor-pointer tw-text-sm"
-            onClick={handleToggleStatus}
-            title="Toggle Open/Closed"
-            aria-label="Toggle conversation status"
-            style={{ borderColor: 'var(--chat-border)' }}
+            className="tw-px-2.5 tw-py-1.5 tw-rounded-lg tw-border tw-border-red-600 tw-bg-red-600 tw-text-white tw-cursor-pointer tw-text-sm hover:tw-bg-red-700 hover:tw-border-red-700 tw-transition-colors"
+            onClick={handleCloseConversation}
+            title="Close conversation"
+            aria-label="Close conversation"
           >
-            Toggle
+            Close
           </button>
+        ) : (
+          !hideStatusToggle && (
+            <button
+              type="button"
+              className="tw-px-2.5 tw-py-1.5 tw-rounded-lg tw-border tw-bg-white tw-cursor-pointer tw-text-sm"
+              onClick={handleToggleStatus}
+              title="Toggle Open/Closed"
+              aria-label="Toggle conversation status"
+              style={{ borderColor: 'var(--chat-border)' }}
+            >
+              Toggle
+            </button>
+          )
         )}
         
         <button

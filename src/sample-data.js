@@ -5,6 +5,7 @@ export const sampleConversations = [
   {
     id: 735,
     title: 'General Question',
+    reference_id: 'CASE-2025-001',
     open: true,
     unread: true,
     lastActivity: '2025-10-29 09:30',
@@ -21,6 +22,7 @@ export const sampleConversations = [
   {
     id: 736,
     title: 'Work related illness',
+    reference_id: 'CASE-2025-002',
     open: true,
     unread: false,
     lastActivity: '2025-10-28 16:20',
@@ -34,6 +36,7 @@ export const sampleConversations = [
   {
     id: 737,
     title: 'Refill Request',
+    reference_id: null,
     open: false,
     unread: false,
     lastActivity: '2025-10-27 11:05',
@@ -46,6 +49,7 @@ export const sampleConversations = [
   {
     id: 738,
     title: 'Appointment Request',
+    reference_id: 'APPT-2025-145',
     open: true,
     unread: true,
     lastActivity: '2025-10-30 13:18',

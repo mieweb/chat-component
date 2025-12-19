@@ -25,7 +25,14 @@ const ConversationList = ({ onConversationOpened = null, onNewConversationClick 
 
   const filteredConversations = conversations
     .filter(c => !searchQuery || c.title.toLowerCase().includes(searchQuery.toLowerCase()))
-    .sort((a, b) => (a.lastActivity < b.lastActivity ? 1 : -1));
+    .sort((a, b) => {
+      // First sort by open status (open conversations first)
+      if (a.open !== b.open) {
+        return a.open ? -1 : 1;
+      }
+      // Then sort by lastActivity (most recent first)
+      return a.lastActivity < b.lastActivity ? 1 : -1;
+    });
 
   return (
     <div className="tw-flex tw-flex-col tw-h-full">

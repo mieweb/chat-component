@@ -205,6 +205,7 @@ function handleMessageSent(data) {
 {
   id: 735,              // Unique conversation ID (integer)
   title: 'string',           // Display title
+  reference_id: 'string',    // Optional: external reference identifier (e.g., 'CASE-2025-001')
   open: boolean,             // true = open, false = closed
   unread: boolean,           // true if has unread messages
   lastActivity: 'string',    // Format: 'YYYY-MM-DD HH:MM'
@@ -403,6 +404,11 @@ console.log(currentState);
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `onMessageSent` | `function` | `undefined` | Callback when user sends a message. Receives `{ text, channel, conversationId, timestamp }` |
+| `onConversationClosed` | `function` | `undefined` | Callback when Close button is clicked. Receives `{ conversationId, conversation }` |
+| `showCloseButton` | `boolean` | `false` | Show Close button instead of Toggle Status button |
+| `hideStatusToggle` | `boolean` | `false` | Hide the conversation status toggle button |
+| `hideToggleButton` | `boolean` | `false` | Hide the sidebar toggle button |
+| `hideNewButton` | `boolean` | `false` | Hide the New Conversation button |
 | `height` | `string` | `'600px'` | CSS height value for the component |
 | `maxWidth` | `string` | `'1100px'` | Maximum width of the component |
 

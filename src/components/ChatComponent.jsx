@@ -12,6 +12,7 @@ const ChatComponent = ({
   onMessageSent = null,
   onConversationOpened = null, // Callback when a conversation is opened/selected
   onConversationCreated = null, // Callback when a new conversation is created
+  onConversationClosed = null, // Callback when a conversation is closed via the Close button
   className = '',
   height = '500px',
   maxWidth = '1100px',
@@ -21,6 +22,7 @@ const ChatComponent = ({
   hideNewButton = false, // Hide the New Conversation button
   hideToggleButton = false, // Hide the sidebar toggle button
   hideStatusToggle = false, // Hide the conversation status toggle button
+  showCloseButton = false, // Show Close button instead of Toggle Status button
   disableClosedConversations = false, // Disable compose area when conversation status is closed
   linkBuilder = null // Function to build custom links: (refType, refId, item) => string
 }) => {
@@ -155,7 +157,12 @@ const ChatComponent = ({
 
       {/* Main content */}
       <main className="tw-flex tw-flex-col tw-flex-1 tw-h-full">
-        <TopBar hideToggleButton={hideToggleButton} hideStatusToggle={hideStatusToggle} />
+        <TopBar 
+          hideToggleButton={hideToggleButton} 
+          hideStatusToggle={hideStatusToggle}
+          showCloseButton={showCloseButton}
+          onConversationClosed={onConversationClosed}
+        />
         
         <div className="tw-flex tw-flex-1 tw-overflow-hidden tw-h-full">
           <div className="tw-flex tw-flex-col tw-flex-1 tw-bg-white tw-m-3.5 tw-rounded-lg tw-shadow-sm tw-overflow-hidden">

@@ -211,8 +211,11 @@ function CustomLinksExample() {
 | `initialActiveConversationId` | `number` | `null` | ID of the conversation to show on mount |
 | `onConversationOpened` | `Function` | `null` | Callback when a conversation is selected. Receives `{ conversationId, conversation }` |
 | `onConversationCreated` | `Function` | `null` | Callback when a new conversation is created. Receives `{ conversationId, conversation }` |
+| `onConversationClosed` | `Function` | `null` | Callback when the Close button is clicked. Receives `{ conversationId, conversation }` |
 | `hideNewButton` | `boolean` | `false` | Hide the "New Conversation" button in the conversation list |
 | `hideToggleButton` | `boolean` | `false` | Hide the sidebar toggle button in the top bar |
+| `hideStatusToggle` | `boolean` | `false` | Hide the conversation status toggle button in the top bar |
+| `showCloseButton` | `boolean` | `false` | Show a Close button instead of the Toggle Status button in the top bar |
 | `disableClosedConversations` | `boolean` | `false` | When `true`, disables the compose area when a conversation's status is 'closed' |
 | `linkBuilder` | `Function` | `null` | Custom function to build reference links. Receives `(refType, refId, item)` and returns a URL string |
 
@@ -295,6 +298,17 @@ onConversationCreated={({ conversationId, conversation }) => {
 }}
 ```
 
+#### onConversationClosed
+Called when the Close button is clicked (only when `showCloseButton` is `true`).
+
+```javascript
+onConversationClosed={({ conversationId, conversation }) => {
+  console.log('Close button clicked for conversation:', conversationId);
+  console.log('Conversation data:', conversation);
+  // Handle conversation close action (e.g., navigate away, hide component)
+}}
+```
+
 ## State Management
 
 The component uses Zustand for state management. You can access the store to programmatically control the component and react to changes.
@@ -357,6 +371,7 @@ For detailed examples of receiving and sending messages, see **[EMBEDDING.md](EM
 {
   id: 735,
   title: 'General Question',
+  reference_id: 'CASE-2025-001',  // Optional: external reference identifier
   open: true,
   unread: false,
   lastActivity: '2025-10-29 09:30',

@@ -30,6 +30,7 @@ Load conversation metadata without full thread data.
 {
   id: 123,                    // Conversation ID (will be parsed to integer)
   title: "Conversation Title",
+  reference_id: "CASE-2025-001", // Optional: external reference identifier
   open: true,                 // Whether conversation is open/active
   unread: false,              // Whether there are unread messages
   lastActivity: "2025-10-30 13:18", // Last activity timestamp
