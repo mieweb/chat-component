@@ -44,12 +44,12 @@ const ConversationList = ({ onConversationOpened = null, onNewConversationClick 
         {!hideNewButton && (
           <button
             type="button"
-            className="tw-px-2.5 tw-py-2 tw-rounded-lg tw-border-none tw-text-white tw-cursor-pointer"
+            className="tw-w-8 tw-h-8 tw-rounded-lg tw-border-none tw-text-white tw-cursor-pointer tw-text-xl tw-flex tw-items-center tw-justify-center"
             style={{ background: 'var(--chat-primary)' }}
             onClick={onNewConversationClick}
             aria-label="Create new conversation"
           >
-            + New
+            +
           </button>
         )}
       </div>
