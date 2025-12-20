@@ -217,6 +217,7 @@ function CustomLinksExample() {
 | `hideStatusToggle` | `boolean` | `false` | Hide the conversation status toggle button in the top bar |
 | `showCloseButton` | `boolean` | `false` | Show a Close button instead of the Toggle Status button in the top bar |
 | `disableClosedConversations` | `boolean` | `false` | When `true`, disables the compose area when a conversation's status is 'closed' |
+| `hideDeliveryMethod` | `boolean` | `false` | Hide the delivery method dropdown in the compose area (useful for patient/external user views) |
 | `linkBuilder` | `Function` | `null` | Custom function to build reference links. Receives `(refType, refId, item)` and returns a URL string |
 
 ### linkBuilder Function

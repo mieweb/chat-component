@@ -24,6 +24,7 @@ const ChatComponent = ({
   hideStatusToggle = false, // Hide the conversation status toggle button
   showCloseButton = false, // Show Close button instead of Toggle Status button
   disableClosedConversations = false, // Disable compose area when conversation status is closed
+  hideDeliveryMethod = false, // Hide the delivery method dropdown in compose area
   linkBuilder = null // Function to build custom links: (refType, refId, item) => string
 }) => {
   const [showNewDialog, setShowNewDialog] = React.useState(false);
@@ -179,6 +180,7 @@ const ChatComponent = ({
               currentUserId={currentUserId}
               activeConversation={activeConversation}
               disableClosedConversations={disableClosedConversations}
+              hideDeliveryMethod={hideDeliveryMethod}
             />
           </div>
         </div>

@@ -409,6 +409,7 @@ console.log(currentState);
 | `hideStatusToggle` | `boolean` | `false` | Hide the conversation status toggle button |
 | `hideToggleButton` | `boolean` | `false` | Hide the sidebar toggle button |
 | `hideNewButton` | `boolean` | `false` | Hide the New Conversation button |
+| `hideDeliveryMethod` | `boolean` | `false` | Hide the delivery method dropdown in the compose area |
 | `height` | `string` | `'600px'` | CSS height value for the component |
 | `maxWidth` | `string` | `'1100px'` | Maximum width of the component |
 

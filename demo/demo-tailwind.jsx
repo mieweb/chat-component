@@ -299,6 +299,7 @@ function DemoApp() {
               maxWidth="100%"
               currentUserId={100}
               linkBuilder={customLinkBuilder}
+              hideDeliveryMethod
             />
             <div style={{
               marginTop: '10px',

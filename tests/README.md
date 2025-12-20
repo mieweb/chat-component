@@ -102,6 +102,7 @@ The `screenshots/` directory stores screenshots taken during accessibility tests
 - ✅ Renders in read-only mode
 - ✅ Hides New button when hideNewButton is true
 - ✅ Hides toggle button when hideToggleButton is true
+- ✅ Hides delivery method dropdown when hideDeliveryMethod is true
 - ✅ Disables compose area for closed conversations when disableClosedConversations is true
 
 ## Running Specific Tests
