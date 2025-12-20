@@ -73,6 +73,16 @@ const ConversationList = ({ onConversationOpened = null, onNewConversationClick 
         {filteredConversations.map(conversation => {
           const conversationLink = linkBuilder ? linkBuilder('conversation', conversation.id, conversation) : null;
           
+          // Determine if conversation was initiated by patient (external) or clinic (internal)
+          const getInitiatorRole = () => {
+            const thread = conversation.thread || [];
+            const firstMessage = thread.find(m => m.role);
+            return firstMessage?.role || 'external';
+          };
+          
+          const initiatorRole = getInitiatorRole();
+          const isPatient = initiatorRole === 'external';
+          
           return (
             <div
               key={conversation.id}
@@ -87,9 +97,20 @@ const ConversationList = ({ onConversationOpened = null, onNewConversationClick 
               aria-selected={conversation.id === activeConversationId}
             >
               <div 
-                className="tw-w-7 tw-h-7 tw-rounded-full tw-bg-[#dbeafe] tw-flex tw-items-center tw-justify-center tw-text-sm tw-text-[#1d4ed8]"
+                className="tw-w-7 tw-h-7 tw-rounded-full tw-bg-[#dbeafe] tw-flex tw-items-center tw-justify-center tw-text-[#1d4ed8]"
+                title={isPatient ? 'Patient' : 'Clinic'}
               >
-                {conversation.title.slice(0, 1).toUpperCase()}
+                {isPatient ? (
+                  // Patient icon (person)
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                  </svg>
+                ) : (
+                  // Clinic icon (medical cross/building)
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-1 11h-4v4h-4v-4H6v-4h4V6h4v4h4v4z"/>
+                  </svg>
+                )}
               </div>
 
               {conversation.unread ? (
