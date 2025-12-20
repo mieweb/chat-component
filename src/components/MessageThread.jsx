@@ -10,8 +10,12 @@ const MessageItem = ({ item, currentUserId, linkBuilder }) => {
   if (item.type === 'message') {
     // Message is on the right if current user sent it
     const isCurrentUser = item.senderId === currentUserId;
+    const senderLabel = item.sender_name || (isCurrentUser ? 'You' : 'Other');
     return (
-      <div 
+      <article 
+        role="article"
+        aria-label={`Message from ${senderLabel}`}
+        data-alignment={isCurrentUser ? 'right' : 'left'}
         className={`tw-mb-5 tw-flex tw-flex-col ${
           isCurrentUser ? 'tw-items-end' : 'tw-items-start'
         }`}
@@ -21,18 +25,18 @@ const MessageItem = ({ item, currentUserId, linkBuilder }) => {
             {item.sender_name}
           </div>
         )}
-        <div 
+        <p 
           className={`tw-max-w-[75%] tw-px-3.5 tw-py-2.5 tw-rounded-2xl tw-text-[15px] ${
             isCurrentUser ? 'tw-bg-[#c8e6c9]' : 'tw-bg-[#e3f2fd]'
           } tw-text-[#222]`}
         >
           <span className="tw-text-sm tw-align-middle">{channelIcon(item.channel)}</span> 
           <span dangerouslySetInnerHTML={{ __html: item.text.replace(/\n/g, '<br>') }} />
-        </div>
+        </p>
         <div className="tw-text-xs tw-text-[#888] tw-mt-0.5 tw-flex tw-items-center tw-gap-1.5">
           {channelLabel(item.channel)} · {time}
         </div>
-      </div>
+      </article>
     );
   }
 

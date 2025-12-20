@@ -80,6 +80,8 @@ const ChatComponent = ({
   if (readOnly && conversation) {
     return (
       <div 
+        role="region"
+        aria-label="Chat"
         className={`chat-component-root tw-flex tw-flex-col tw-overflow-hidden tw-border tw-rounded-lg ${className}`}
         style={{ 
           height,
@@ -116,6 +118,8 @@ const ChatComponent = ({
 
   return (
     <div 
+      role="region"
+      aria-label="Chat"
       className={`chat-component-root tw-flex tw-relative tw-overflow-hidden tw-border tw-rounded-lg ${className}`}
       style={{ 
         height,
@@ -167,12 +171,12 @@ const ChatComponent = ({
         <div className="tw-flex tw-flex-1 tw-overflow-hidden tw-h-full">
           <div className="tw-flex tw-flex-col tw-flex-1 tw-bg-white tw-m-3.5 tw-rounded-lg tw-shadow-sm tw-overflow-hidden">
             <MessageThread 
-              currentUserId={storedCurrentUserId} 
+              currentUserId={currentUserId} 
               linkBuilder={linkBuilder}
             />
             <ComposeArea 
               onMessageSent={onMessageSent} 
-              currentUserId={storedCurrentUserId}
+              currentUserId={currentUserId}
               activeConversation={activeConversation}
               disableClosedConversations={disableClosedConversations}
             />
