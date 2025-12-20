@@ -11,6 +11,7 @@ const TopBar = ({
   const toggleConversationStatus = useChatStore(state => state.toggleConversationStatus);
   const markAsUnread = useChatStore(state => state.markAsUnread);
   const toggleSidebar = useChatStore(state => state.toggleSidebar);
+  const sidebarOpen = useChatStore(state => state.sidebarOpen);
 
   const handleToggleStatus = () => {
     if (activeConversation) {
@@ -18,13 +19,18 @@ const TopBar = ({
     }
   };
 
-  const handleCloseConversation = () => {
-    if (activeConversation && onConversationClosed) {
+  const handleOpenClose = () => {
+    if (!activeConversation) return;
+
+    // If a consumer wants to be notified about closes, preserve that behavior.
+    if (activeConversation.open && showCloseButton && onConversationClosed) {
       onConversationClosed({
         conversationId: activeConversation.id,
         conversation: activeConversation
       });
     }
+
+    toggleConversationStatus(activeConversation.id);
   };
 
   const handleMarkUnread = () => {
@@ -33,19 +39,26 @@ const TopBar = ({
     }
   };
 
+  const isOpen = !!activeConversation?.open;
+  const hasConversation = !!activeConversation;
+
+  const iconButtonClassName =
+    'tw-w-8 tw-h-8 tw-rounded-md tw-border tw-bg-white tw-cursor-pointer tw-flex tw-items-center tw-justify-center hover:tw-bg-gray-100 tw-transition-colors disabled:tw-cursor-not-allowed disabled:tw-opacity-60';
+
   return (
     <header 
-      className="tw-bg-white tw-border-b tw-px-3.5 tw-py-2.5 tw-flex tw-items-center tw-justify-between"
+      className="tw-bg-white tw-border-b tw-px-3 tw-py-1.5 tw-flex tw-items-center tw-justify-between tw-gap-2"
       style={{ borderColor: 'var(--chat-border)' }}
     >
-      <div className="tw-flex tw-items-center tw-gap-2">
-        {!hideToggleButton && (
+      <div className="tw-flex tw-items-center tw-gap-2 tw-min-w-0">
+        {!hideToggleButton && !sidebarOpen && (
           <button
             type="button"
-            className="tw-border-none tw-bg-transparent tw-cursor-pointer tw-p-1.5 tw-rounded-md hover:tw-bg-gray-100 tw-transition-colors"
+            className="tw-w-8 tw-h-8 tw-rounded-md tw-border tw-bg-white tw-cursor-pointer tw-flex tw-items-center tw-justify-center hover:tw-bg-gray-100 tw-transition-colors min-[900px]:tw-hidden"
             onClick={toggleSidebar}
-            aria-label="Open conversations"
-            title="Open conversations"
+            aria-label="Toggle conversations"
+            title="Toggle conversations"
+            style={{ borderColor: 'var(--chat-border)' }}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <line x1="3" y1="6" x2="21" y2="6" />
@@ -54,59 +67,97 @@ const TopBar = ({
             </svg>
           </button>
         )}
-        <div className="tw-font-bold">
+        <div className="tw-font-semibold tw-text-sm tw-truncate">
           {activeConversation?.title || 'Clinical Timeline'}
         </div>
       </div>
       
-      <div className="tw-flex tw-gap-2 tw-items-center">
+      <div className="tw-flex tw-gap-2 tw-items-center tw-flex-shrink-0">
         <span 
-          className={`tw-text-xs tw-px-2 tw-py-0.5 tw-rounded-full ${
-            activeConversation?.open 
+          className={`tw-text-[11px] tw-leading-4 tw-px-1.5 tw-py-0.5 tw-rounded-full ${
+            isOpen
               ? 'tw-text-[var(--chat-open-text)]' 
               : 'tw-text-[var(--chat-closed-text)]'
           }`}
           style={{
-            background: activeConversation?.open ? 'var(--chat-open-bg)' : 'var(--chat-closed-bg)'
+            background: isOpen ? 'var(--chat-open-bg)' : 'var(--chat-closed-bg)'
           }}
         >
-          {activeConversation?.open ? 'Open' : 'Closed'}
+          {isOpen ? 'Open' : 'Closed'}
         </span>
-        
-        {showCloseButton && activeConversation?.open ? (
+
+        {!hideStatusToggle && (
           <button
             type="button"
-            className="tw-px-2.5 tw-py-1.5 tw-rounded-lg tw-border tw-border-red-600 tw-bg-red-600 tw-text-white tw-cursor-pointer tw-text-sm hover:tw-bg-red-700 hover:tw-border-red-700 tw-transition-colors"
-            onClick={handleCloseConversation}
-            title="Close conversation"
-            aria-label="Close conversation"
+            className={iconButtonClassName}
+            onClick={showCloseButton ? handleOpenClose : handleToggleStatus}
+            title={isOpen ? 'Close conversation' : 'Reopen conversation'}
+            aria-label={isOpen ? 'Close conversation' : 'Reopen conversation'}
+            style={{ borderColor: 'var(--chat-border)' }}
+            disabled={!hasConversation}
           >
-            Close
+            {isOpen ? (
+              // Lock icon (action: close)
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+            ) : (
+              // Unlock icon (action: reopen)
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" />
+                <path d="M7 11V7a5 5 0 0 1 9.9-1" />
+              </svg>
+            )}
           </button>
-        ) : (
-          !hideStatusToggle && (
-            <button
-              type="button"
-              className="tw-px-2.5 tw-py-1.5 tw-rounded-lg tw-border tw-bg-white tw-cursor-pointer tw-text-sm"
-              onClick={handleToggleStatus}
-              title="Toggle Open/Closed"
-              aria-label="Toggle conversation status"
-              style={{ borderColor: 'var(--chat-border)' }}
-            >
-              Toggle
-            </button>
-          )
         )}
-        
+
         <button
           type="button"
-          className="tw-px-2.5 tw-py-1.5 tw-rounded-lg tw-border tw-bg-white tw-cursor-pointer tw-text-sm"
+          className={iconButtonClassName}
           onClick={handleMarkUnread}
-          title="Mark unread"
+          title="Mark conversation as unread"
           aria-label="Mark conversation as unread"
           style={{ borderColor: 'var(--chat-border)' }}
+          disabled={!hasConversation}
         >
-          Mark Unread
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <rect x="3" y="5" width="18" height="14" rx="2" />
+            <polyline points="3 7 12 13 21 7" />
+          </svg>
         </button>
       </div>
     </header>
