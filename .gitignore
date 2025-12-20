@@ -25,3 +25,4 @@ playwright-report/
 playwright/.cache/
 tests/screenshots/*.png
 !tests/screenshots/.gitkeep
+.playwright-mcp/
