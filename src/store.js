@@ -72,6 +72,7 @@ const useChatStore = create((set, get) => ({
       channel: message.channel || 'auto',
       time: timestamp,
       text: message.text,
+      images: message.images || [],
     };
 
     const updatedConversations = conversations.map(c => {

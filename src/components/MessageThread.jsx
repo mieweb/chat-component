@@ -11,6 +11,9 @@ const MessageItem = ({ item, currentUserId, linkBuilder }) => {
     // Message is on the right if current user sent it
     const isCurrentUser = item.senderId === currentUserId;
     const senderLabel = item.sender_name || (isCurrentUser ? 'You' : 'Other');
+    const hasImages = item.images && item.images.length > 0;
+    const hasText = item.text && item.text.trim();
+    
     return (
       <article 
         role="article"
@@ -25,14 +28,43 @@ const MessageItem = ({ item, currentUserId, linkBuilder }) => {
             {item.sender_name}
           </div>
         )}
-        <p 
-          className={`tw-max-w-[75%] tw-px-3.5 tw-py-2.5 tw-rounded-2xl tw-text-[15px] ${
-            isCurrentUser ? 'tw-bg-[#c8e6c9]' : 'tw-bg-[#e3f2fd]'
-          } tw-text-[#222]`}
-        >
-          <span className="tw-text-sm tw-align-middle">{channelIcon(item.channel)}</span> 
-          <span dangerouslySetInnerHTML={{ __html: item.text.replace(/\n/g, '<br>') }} />
-        </p>
+        {/* Images */}
+        {hasImages && (
+          <div className={`tw-flex tw-flex-wrap tw-gap-1 tw-mb-1 ${isCurrentUser ? 'tw-justify-end' : 'tw-justify-start'}`}>
+            {item.images.map((img, idx) => (
+              <a 
+                key={idx}
+                href={img.dataUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="tw-block"
+              >
+                <img 
+                  src={img.dataUrl} 
+                  alt={img.name || `Image ${idx + 1}`}
+                  className="tw-max-w-[200px] tw-max-h-[200px] tw-rounded-lg tw-object-cover tw-cursor-pointer hover:tw-opacity-90"
+                />
+              </a>
+            ))}
+          </div>
+        )}
+        {/* Text bubble */}
+        {hasText && (
+          <p 
+            className={`tw-max-w-[75%] tw-px-3.5 tw-py-2.5 tw-rounded-2xl tw-text-[15px] ${
+              isCurrentUser ? 'tw-bg-[#c8e6c9]' : 'tw-bg-[#e3f2fd]'
+            } tw-text-[#222]`}
+          >
+            <span className="tw-text-sm tw-align-middle">{channelIcon(item.channel)}</span> 
+            <span dangerouslySetInnerHTML={{ __html: item.text.replace(/\n/g, '<br>') }} />
+          </p>
+        )}
+        {/* Channel icon only when no text but has images */}
+        {!hasText && hasImages && (
+          <div className="tw-text-sm tw-text-[#888]">
+            {channelIcon(item.channel)}
+          </div>
+        )}
         <div className="tw-text-xs tw-text-[#888] tw-mt-0.5 tw-flex tw-items-center tw-gap-1.5">
           {channelLabel(item.channel)} · {time}
         </div>
