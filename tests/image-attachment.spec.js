@@ -45,7 +45,7 @@ test.describe('Image Attachment Feature', () => {
     const attachButton = page.getByRole('button', { name: 'Attach image' });
     
     // Create a temporary test image file
-    const testImagePath = path.join(process.cwd(), 'test-image.png');
+    const testImagePath = path.join(process.cwd(), 'test-image-preview.png');
     fs.writeFileSync(testImagePath, createTestImageBuffer());
     
     try {
@@ -75,7 +75,7 @@ test.describe('Image Attachment Feature', () => {
     const attachButton = page.getByRole('button', { name: 'Attach image' });
     
     // Create a temporary test image file
-    const testImagePath = path.join(process.cwd(), 'test-image.png');
+    const testImagePath = path.join(process.cwd(), 'test-image-remove.png');
     fs.writeFileSync(testImagePath, createTestImageBuffer());
     
     try {
@@ -109,7 +109,7 @@ test.describe('Image Attachment Feature', () => {
     const attachButton = page.getByRole('button', { name: 'Attach image' });
     
     // Create a temporary test image file
-    const testImagePath = path.join(process.cwd(), 'test-image.png');
+    const testImagePath = path.join(process.cwd(), 'test-image-send.png');
     fs.writeFileSync(testImagePath, createTestImageBuffer());
     
     try {
@@ -158,7 +158,7 @@ test.describe('Image Attachment Feature', () => {
     const attachButton = page.getByRole('button', { name: 'Attach image' });
     
     // Create a temporary test image file
-    const testImagePath = path.join(process.cwd(), 'test-image.png');
+    const testImagePath = path.join(process.cwd(), 'test-image-only.png');
     fs.writeFileSync(testImagePath, createTestImageBuffer());
     
     try {
