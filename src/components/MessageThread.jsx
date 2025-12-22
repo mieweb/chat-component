@@ -8,6 +8,24 @@ const MessageItem = ({ item, currentUserId, linkBuilder }) => {
   });
 
   if (item.type === 'message') {
+    // System messages are center-aligned
+    if (item.role === 'system') {
+      return (
+        <div className="tw-mb-5 tw-flex tw-flex-col tw-items-center">
+          <div 
+            className="tw-bg-[#fff9c4] tw-border tw-border-[#fff59d] tw-rounded-xl tw-px-4 tw-py-2.5 tw-max-w-[85%] tw-text-[15px] tw-shadow-sm tw-text-center"
+          >
+            <div className="tw-text-[#666]">
+              <span dangerouslySetInnerHTML={{ __html: item.text.replace(/\n/g, '<br>') }} />
+            </div>
+            <div className="tw-text-xs tw-text-[#888] tw-mt-1">
+              {time}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     // Message is on the right if current user sent it
     const isCurrentUser = item.senderId === currentUserId;
     const senderLabel = item.sender_name || (isCurrentUser ? 'You' : 'Other');

@@ -25,7 +25,6 @@ const useChatStore = create((set, get) => ({
   activeConversationId: null,
   searchQuery: '',
   sidebarOpen: false,
-  currentUserId: null,
   conversationsLoading: false,
   conversationsHasMore: false,
   threadLoadingStates: {}, // { [conversationId]: { isLoading: boolean, hasMore: boolean } }
@@ -131,15 +130,12 @@ const useChatStore = create((set, get) => ({
       lastActivity: now,
       thread: [
         {
-          type: 'ref',
-          refType: 'appt',
-          refId: null,
-          title: 'Conversation Created',
-          role: 'internal',
+          type: 'message',
+          role: 'system',
           senderId: null,
           channel: 'auto',
           time: now,
-          text: 'Conversation Created: New conversation initialized.'
+          text: 'New conversation initialized.'
         }
       ]
     };
@@ -166,12 +162,6 @@ const useChatStore = create((set, get) => ({
     set({ sidebarOpen: open });
   },
 
-  // Set current user ID
-  setCurrentUserId: (userId) => {
-    const intUserId = userId !== null && userId !== undefined ? parseInt(userId, 10) : null;
-    set({ currentUserId: intUserId });
-  },
-
   // Replace entire state with new data
   loadConversations: (data) => {
     // Ensure all IDs are integers
@@ -192,14 +182,10 @@ const useChatStore = create((set, get) => ({
     const activeId = data.activeConversationId 
       ? parseInt(data.activeConversationId, 10) 
       : conversations[0]?.id || null;
-    const userId = data.currentUserId !== undefined 
-      ? parseInt(data.currentUserId, 10) 
-      : null;
     
     set({
       conversations,
       activeConversationId: activeId,
-      ...(userId !== null && { currentUserId: userId }),
     });
   },
 
@@ -320,11 +306,10 @@ const useChatStore = create((set, get) => ({
 
   // Export current state
   exportState: () => {
-    const { conversations, activeConversationId, currentUserId } = get();
+    const { conversations, activeConversationId } = get();
     return {
       conversations,
       activeConversationId,
-      currentUserId,
     };
   },
 }));

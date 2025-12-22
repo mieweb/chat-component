@@ -389,8 +389,8 @@ For detailed examples of receiving and sending messages, see **[EMBEDDING.md](EM
 ```javascript
 {
   type: 'message',
-  role: 'external' | 'internal',
-  senderId: 100,  // Integer user/patient ID
+  role: 'external' | 'internal' | 'system',
+  senderId: 100,  // Integer user/patient ID (null for system messages)
   channel: 'portal' | 'sms' | 'voicemail' | 'auto',
   time: '2025-10-29 08:12',
   text: 'Message text'
@@ -418,6 +418,21 @@ For detailed examples of receiving and sending messages, see **[EMBEDDING.md](EM
 - `rx` - Prescriptions
 - `appt` - Appointments
 - Additional types can be added as needed
+
+#### System Message
+
+```javascript
+{
+  type: 'message',
+  role: 'system',
+  senderId: null,
+  channel: 'auto',
+  time: '2025-10-29 08:00',
+  text: 'New conversation initialized.'
+}
+```
+
+System messages are center-aligned in a yellow text box and are used for automated messages like conversation creation notifications. They use `role: 'system'` instead of `'external'` or `'internal'`.
 
 ## Loading Custom Data
 

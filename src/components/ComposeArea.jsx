@@ -6,7 +6,8 @@ const ComposeArea = ({
   currentUserId = null, 
   activeConversation, 
   disableClosedConversations = false,
-  hideDeliveryMethod = false 
+  hideDeliveryMethod = false,
+  onConversationCreated = null 
 }) => {
   const [text, setText] = useState('');
   const [sendType, setSendType] = useState('auto');
@@ -15,6 +16,9 @@ const ComposeArea = ({
   const fileInputRef = useRef(null);
 
   const addMessage = useChatStore(state => state.addMessage);
+  const conversations = useChatStore(state => state.conversations);
+  const createConversation = useChatStore(state => state.createConversation);
+  const getActiveConversation = useChatStore(state => state.getActiveConversation);
 
   // Fix: Use 'open' property instead of 'status', and add null check
   const isClosed = disableClosedConversations && activeConversation && !activeConversation.open;
@@ -133,7 +137,20 @@ const ComposeArea = ({
   };
 
   const handleSend = () => {
-    if ((!text.trim() && images.length === 0) || isClosed || !activeConversation) return;
+    if ((!text.trim() && images.length === 0) || isClosed ) return;
+
+    // If no conversations exist, create a new one
+    let conversationToUse = activeConversation;
+    let newlyCreatedConversation = false;
+    
+    if (!activeConversation && conversations.length === 0) {
+      const newConversation = createConversation('New Conversation');
+      conversationToUse = newConversation;
+      newlyCreatedConversation = true;
+    }
+
+    // If still no conversation (edge case), return
+    if (!conversationToUse) return;
 
     const message = {
       text: text.trim(),
@@ -144,12 +161,25 @@ const ComposeArea = ({
 
     const newMessage = addMessage(message);
 
-    // Call the callback if provided
-    if (onMessageSent && newMessage) {
-      onMessageSent({
-        conversationId: activeConversation.id,
-        message: newMessage,
-      });
+    // If we created a new conversation, trigger onConversationCreated with full conversation including the message
+    if (newlyCreatedConversation) {
+      if (onConversationCreated) {
+        const updatedConversation = getActiveConversation();
+        if (updatedConversation) {
+          onConversationCreated({
+            conversationId: updatedConversation.id,
+            conversation: updatedConversation
+          });
+        }
+      }
+    } else {
+      // Only call onMessageSent if we didn't just create a conversation
+      if (onMessageSent && newMessage) {
+        onMessageSent({
+          conversationId: conversationToUse.id,
+          message: newMessage,
+        });
+      }
     }
 
     setText('');

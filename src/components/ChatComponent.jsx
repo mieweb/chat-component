@@ -34,15 +34,8 @@ const ChatComponent = ({
   const setSidebarOpen = useChatStore(state => state.setSidebarOpen);
   const loadConversations = useChatStore(state => state.loadConversations);
   const createConversation = useChatStore(state => state.createConversation);
-  const setCurrentUserId = useChatStore(state => state.setCurrentUserId);
-  const storedCurrentUserId = useChatStore(state => state.currentUserId);
   const setActiveConversation = useChatStore(state => state.setActiveConversation);
   const activeConversation = useChatStore(state => state.getActiveConversation());
-
-  // Sync currentUserId prop with store
-  React.useEffect(() => {
-    setCurrentUserId(currentUserId);
-  }, [currentUserId, setCurrentUserId]);
 
   // Load initial data if provided
   React.useEffect(() => {
@@ -181,6 +174,7 @@ const ChatComponent = ({
               activeConversation={activeConversation}
               disableClosedConversations={disableClosedConversations}
               hideDeliveryMethod={hideDeliveryMethod}
+              onConversationCreated={onConversationCreated}
             />
           </div>
         </div>
