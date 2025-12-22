@@ -35,6 +35,92 @@
           </button>
         </div>
 
+        <!-- Component Props Editor Card -->
+        <div class="card mb-4">
+          <div class="card-body">
+            <h5 class="card-title">Component Props Editor</h5>
+            <p class="text-muted">Toggle component properties and click "Apply Props" to reinitialize the chat component.</p>
+            
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="propShowCloseButton">
+                  <label class="form-check-label" for="propShowCloseButton">
+                    <strong>showCloseButton</strong> - Show Close button instead of Toggle Status
+                  </label>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="propHideStatusToggle">
+                  <label class="form-check-label" for="propHideStatusToggle">
+                    <strong>hideStatusToggle</strong> - Hide the status toggle button
+                  </label>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="propHideNewButton">
+                  <label class="form-check-label" for="propHideNewButton">
+                    <strong>hideNewButton</strong> - Hide the New Conversation button
+                  </label>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="propHideToggleButton">
+                  <label class="form-check-label" for="propHideToggleButton">
+                    <strong>hideToggleButton</strong> - Hide the sidebar toggle button
+                  </label>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="propHideDeliveryMethod">
+                  <label class="form-check-label" for="propHideDeliveryMethod">
+                    <strong>hideDeliveryMethod</strong> - Hide the delivery method dropdown
+                  </label>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="propReadOnly">
+                  <label class="form-check-label" for="propReadOnly">
+                    <strong>readOnly</strong> - Enable read-only mode
+                  </label>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="propDisableClosedConversations">
+                  <label class="form-check-label" for="propDisableClosedConversations">
+                    <strong>disableClosedConversations</strong> - Disable compose when closed
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-3">
+              <button class="btn btn-primary" id="applyPropsBtn">
+                Apply Props
+              </button>
+              <button class="btn btn-outline-secondary ms-2" id="resetPropsBtn">
+                Reset to Defaults
+              </button>
+            </div>
+            
+            <div id="propsSuccess" class="alert alert-success mt-3" style="display: none;">
+              Props applied successfully! Component reinitialized.
+            </div>
+          </div>
+        </div>
+
         <!-- JSON Editor Card -->
         <div class="card mb-4">
           <div class="card-body">
@@ -190,16 +276,34 @@
     console.log('React:', React);
     console.log('ReactDOM:', ReactDOM);
     
-    const root = ReactDOM.createRoot(document.getElementById('chat-container'));
+    let root = ReactDOM.createRoot(document.getElementById('chat-container'));
     
-    root.render(
-      React.createElement(ChatComponent.default, {
+    // Function to initialize/reinitialize the component with props
+    function initializeComponent(props = {}) {
+      const defaultProps = {
         onMessageSent: handleMessageSent,
+        onConversationClosed: handleConversationClosed,
         height: '500px',
         maxWidth: '100%',
-        currentUserId: 200 // Current user ID (Dr. Smith)
-      })
-    );
+        currentUserId: 200,
+        ...props
+      };
+      
+      root.render(
+        React.createElement(ChatComponent.default, defaultProps)
+      );
+      
+      console.log('Component initialized with props:', defaultProps);
+    }
+    
+    // Handle conversation closed callback
+    function handleConversationClosed(data) {
+      console.log('Conversation closed:', data);
+      alert(`Conversation "${data.conversation.title}" was closed via Close button`);
+    }
+    
+    // Initialize with default props
+    initializeComponent();
     
     // Initialize JSON editor with current state
     function updateJsonEditor() {
@@ -287,6 +391,69 @@
         jsonError.style.display = 'block';
         console.error('JSON parsing error:', error);
       }
+    });
+    
+    // Props Editor: Apply Props button handler
+    document.getElementById('applyPropsBtn').addEventListener('click', () => {
+      const props = {
+        showCloseButton: document.getElementById('propShowCloseButton').checked,
+        hideStatusToggle: document.getElementById('propHideStatusToggle').checked,
+        hideNewButton: document.getElementById('propHideNewButton').checked,
+        hideToggleButton: document.getElementById('propHideToggleButton').checked,
+        hideDeliveryMethod: document.getElementById('propHideDeliveryMethod').checked,
+        readOnly: document.getElementById('propReadOnly').checked,
+        disableClosedConversations: document.getElementById('propDisableClosedConversations').checked
+      };
+      
+      // Get current state before reinitializing
+      const currentState = ChatComponent.useChatStore.getState().exportState();
+      
+      // Reinitialize component with new props
+      initializeComponent(props);
+      
+      // Restore state after reinitialization
+      setTimeout(() => {
+        ChatComponent.useChatStore.getState().loadConversations(currentState);
+      }, 100);
+      
+      // Show success message
+      const successMsg = document.getElementById('propsSuccess');
+      successMsg.style.display = 'block';
+      setTimeout(() => {
+        successMsg.style.display = 'none';
+      }, 3000);
+    });
+    
+    // Props Editor: Reset Props button handler
+    document.getElementById('resetPropsBtn').addEventListener('click', () => {
+      // Uncheck all checkboxes
+      document.getElementById('propShowCloseButton').checked = false;
+      document.getElementById('propHideStatusToggle').checked = false;
+      document.getElementById('propHideNewButton').checked = false;
+      document.getElementById('propHideToggleButton').checked = false;
+      document.getElementById('propHideDeliveryMethod').checked = false;
+      document.getElementById('propReadOnly').checked = false;
+      document.getElementById('propDisableClosedConversations').checked = false;
+      
+      // Get current state before reinitializing
+      const currentState = ChatComponent.useChatStore.getState().exportState();
+      
+      // Reinitialize with default props
+      initializeComponent();
+      
+      // Restore state after reinitialization
+      setTimeout(() => {
+        ChatComponent.useChatStore.getState().loadConversations(currentState);
+      }, 100);
+      
+      // Show success message
+      const successMsg = document.getElementById('propsSuccess');
+      successMsg.textContent = 'Props reset to defaults! Component reinitialized.';
+      successMsg.style.display = 'block';
+      setTimeout(() => {
+        successMsg.textContent = 'Props applied successfully! Component reinitialized.';
+        successMsg.style.display = 'none';
+      }, 3000);
     });
   </script>
 </body>
