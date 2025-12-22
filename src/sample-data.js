@@ -62,13 +62,11 @@ export const sampleConversations = [
 ];
 
 export const sampleActiveConversationId = 735;
-export const sampleCurrentUserId = null;
 
 // Helper function to get initial demo state
 export function getDemoInitialState() {
   return {
     conversations: sampleConversations,
     activeConversationId: sampleActiveConversationId,
-    currentUserId: sampleCurrentUserId,
   };
 }

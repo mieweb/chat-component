@@ -40,6 +40,21 @@ Tests the Tailwind demo simulator functionality:
 - Responsive layout in simulator mode
 - Rapid toggling stability
 
+### `system-messages.spec.js`
+Tests system message functionality:
+- System message creation when new conversation is created
+- Center alignment of system messages
+- Yellow background styling (distinct from regular messages)
+- No sender name displayed for system messages
+- Timestamp display
+- Visual distinction from regular messages
+- Proper rendering with text-center alignment
+- Handling multiple system messages in a conversation
+- No channel icons displayed for system messages
+
+### `link-builder.spec.js`
+Tests custom link builder functionality for references.
+
 ## Running Tests
 
 ### Run all tests
