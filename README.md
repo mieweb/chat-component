@@ -219,6 +219,7 @@ function CustomLinksExample() {
 | `disableClosedConversations` | `boolean` | `false` | When `true`, disables the compose area when a conversation's status is 'closed' |
 | `hideDeliveryMethod` | `boolean` | `false` | Hide the delivery method dropdown in the compose area (useful for patient/external user views) |
 | `linkBuilder` | `Function` | `null` | Custom function to build reference links. Receives `(refType, refId, item)` and returns a URL string |
+| `onNewConversation` | `Function` | `null` | Custom handler for New Conversation button. Receives helper functions `{ openDialog, createConversation }` |
 
 ### linkBuilder Function
 
@@ -307,6 +308,52 @@ onConversationClosed={({ conversationId, conversation }) => {
   console.log('Close button clicked for conversation:', conversationId);
   console.log('Conversation data:', conversation);
   // Handle conversation close action (e.g., navigate away, hide component)
+}}
+```
+
+#### onNewConversation
+Custom handler for the New Conversation button. Receives helper functions to control behavior:
+
+```javascript
+onNewConversation={({ openDialog, createConversation }) => {
+  // Example 1: Navigate to a URL
+  window.location.href = '/create-conversation';
+  
+  // Example 2: Open the default dialog
+  openDialog();
+  
+  // Example 3: Create a conversation programmatically
+  const newConv = createConversation('Quick Chat', true);
+  
+  // Example 4: Create without triggering onConversationCreated
+  createConversation('Silent Create', false);
+}}
+```
+
+**Helper Functions:**
+- `openDialog()` - Opens the default new conversation dialog
+- `createConversation(title, triggerCallback)` - Programmatically creates a conversation
+  - `title` (string, optional): Conversation title, defaults to 'New Conversation'
+  - `triggerCallback` (boolean, default: true): Whether to trigger `onConversationCreated` callback
+  - Returns the created conversation object
+
+**Common Use Cases:**
+```javascript
+// Navigate to external page
+onNewConversation={() => {
+  window.location.href = '/conversations/new';
+}}
+
+// Custom logic then open dialog
+onNewConversation={({ openDialog }) => {
+  console.log('User creating new conversation');
+  trackAnalytics('new_conversation_clicked');
+  openDialog();
+}}
+
+// Programmatically create with custom title
+onNewConversation={({ createConversation }) => {
+  createConversation('Patient Inquiry - ' + new Date().toLocaleDateString());
 }}
 ```
 

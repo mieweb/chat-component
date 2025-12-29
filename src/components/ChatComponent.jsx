@@ -25,7 +25,8 @@ const ChatComponent = ({
   showCloseButton = false, // Show Close button instead of Toggle Status button
   disableClosedConversations = false, // Disable compose area when conversation status is closed
   hideDeliveryMethod = false, // Hide the delivery method dropdown in compose area
-  linkBuilder = null // Function to build custom links: (refType, refId, item) => string
+  linkBuilder = null, // Function to build custom links: (refType, refId, item) => string
+  onNewConversation = null // Custom handler for New Conversation button: receives { openDialog, createConversation } helpers
 }) => {
   const [showNewDialog, setShowNewDialog] = React.useState(false);
   const [newConvTitle, setNewConvTitle] = React.useState('');
@@ -53,6 +54,29 @@ const ChatComponent = ({
 
   const handleBackdropClick = () => {
     setSidebarOpen(false);
+  };
+
+  const handleNewConversationClick = () => {
+    // If a custom handler is provided, call it with helper functions
+    if (onNewConversation) {
+      onNewConversation({
+        openDialog: () => setShowNewDialog(true),
+        createConversation: (title, triggerCallback = true) => {
+          const newConv = createConversation(title || 'New Conversation');
+          if (triggerCallback && onConversationCreated && newConv) {
+            onConversationCreated({
+              conversationId: newConv.id,
+              conversation: newConv
+            });
+          }
+          return newConv;
+        }
+      });
+      return;
+    }
+    
+    // Default behavior: show the new conversation dialog
+    setShowNewDialog(true);
   };
 
   const handleCreateConversation = () => {
@@ -139,7 +163,7 @@ const ChatComponent = ({
       >
         <ConversationList 
           onConversationOpened={onConversationOpened}
-          onNewConversationClick={() => setShowNewDialog(true)}
+          onNewConversationClick={handleNewConversationClick}
           hideNewButton={hideNewButton}
           linkBuilder={linkBuilder}
         />
