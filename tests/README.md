@@ -55,6 +55,25 @@ Tests system message functionality:
 ### `link-builder.spec.js`
 Tests custom link builder functionality for references.
 
+### `bootstrap-readonly.spec.js`
+Tests readonly mode functionality in Bootstrap demo:
+- ReadOnly prop checkbox in Component Props Editor
+- Enabling/disabling readonly mode via props
+- Sidebar and compose area visibility toggling
+- Message thread display in readonly mode
+- No interactive elements in readonly mode
+- State restoration when disabling readonly mode
+- Conversation data preservation during toggles
+- Reset to Defaults button functionality
+- Conversation prop injection in readonly mode
+- Handling different active conversations in readonly mode
+- Readonly mode with prop combinations
+- Handling closed conversations in readonly mode
+- Bootstrap/Tailwind style isolation
+- Rapid toggling stability
+- Accessibility in readonly mode
+- Error handling and edge cases
+
 ## Running Tests
 
 ### Run all tests

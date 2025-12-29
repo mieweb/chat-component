@@ -395,15 +395,26 @@
     
     // Props Editor: Apply Props button handler
     document.getElementById('applyPropsBtn').addEventListener('click', () => {
+      const isReadOnly = document.getElementById('propReadOnly').checked;
+      
       const props = {
         showCloseButton: document.getElementById('propShowCloseButton').checked,
         hideStatusToggle: document.getElementById('propHideStatusToggle').checked,
         hideNewButton: document.getElementById('propHideNewButton').checked,
         hideToggleButton: document.getElementById('propHideToggleButton').checked,
         hideDeliveryMethod: document.getElementById('propHideDeliveryMethod').checked,
-        readOnly: document.getElementById('propReadOnly').checked,
+        readOnly: isReadOnly,
         disableClosedConversations: document.getElementById('propDisableClosedConversations').checked
       };
+      
+      // If readonly mode is enabled, inject the active conversation
+      if (isReadOnly) {
+        const store = ChatComponent.useChatStore.getState();
+        const activeConv = store.conversations.find(c => c.id === store.activeConversationId);
+        if (activeConv) {
+          props.conversation = activeConv;
+        }
+      }
       
       // Get current state before reinitializing
       const currentState = ChatComponent.useChatStore.getState().exportState();
@@ -411,10 +422,12 @@
       // Reinitialize component with new props
       initializeComponent(props);
       
-      // Restore state after reinitialization
-      setTimeout(() => {
-        ChatComponent.useChatStore.getState().loadConversations(currentState);
-      }, 100);
+      // Restore state after reinitialization (only if not in readonly mode)
+      if (!isReadOnly) {
+        setTimeout(() => {
+          ChatComponent.useChatStore.getState().loadConversations(currentState);
+        }, 100);
+      }
       
       // Show success message
       const successMsg = document.getElementById('propsSuccess');
