@@ -112,3 +112,45 @@
 .chat-component-root [class*="textarea"] {
   height: auto !important;
 }
+/* Print styles for PDF/print rendering engines (e.g., HTMLENGINE CHROMIUM) */
+@media print {
+  .chat-component-root {
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    border: 1px solid #000 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    page-break-inside: avoid;
+  }
+  
+  /* Remove shadows and rounded corners for cleaner print output */
+  .chat-component-root * {
+    box-shadow: none !important;
+  }
+  
+  /* Ensure message thread expands to show all content */
+  .chat-component-root .tw-flex-col {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  
+  /* Ensure all messages are visible in print */
+  .chat-component-root [class*="tw-overflow"] {
+    overflow: visible !important;
+  }
+  
+  /* Simplify colors for better print contrast */
+  .chat-component-root {
+    background-color: white !important;
+    color: black !important;
+  }
+  
+  /* Ensure links are underlined in print for clarity */
+  .chat-component-root a {
+    text-decoration: underline !important;
+    color: #0066cc !important;
+  }
+}
