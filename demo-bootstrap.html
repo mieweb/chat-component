@@ -104,6 +104,13 @@
                   </label>
                 </div>
               </div>
+              
+              <div class="col-md-6">
+                <label for="propHeight" class="form-label">
+                  <strong>height</strong> - Component height (e.g., "500px", "auto")
+                </label>
+                <input type="text" class="form-control" id="propHeight" value="500px">
+              </div>
             </div>
             
             <div class="mt-3">
@@ -396,6 +403,7 @@
     // Props Editor: Apply Props button handler
     document.getElementById('applyPropsBtn').addEventListener('click', () => {
       const isReadOnly = document.getElementById('propReadOnly').checked;
+      const heightValue = document.getElementById('propHeight').value.trim() || '500px';
       
       const props = {
         showCloseButton: document.getElementById('propShowCloseButton').checked,
@@ -404,7 +412,8 @@
         hideToggleButton: document.getElementById('propHideToggleButton').checked,
         hideDeliveryMethod: document.getElementById('propHideDeliveryMethod').checked,
         readOnly: isReadOnly,
-        disableClosedConversations: document.getElementById('propDisableClosedConversations').checked
+        disableClosedConversations: document.getElementById('propDisableClosedConversations').checked,
+        height: heightValue
       };
       
       // If readonly mode is enabled, inject the active conversation
@@ -447,6 +456,7 @@
       document.getElementById('propHideDeliveryMethod').checked = false;
       document.getElementById('propReadOnly').checked = false;
       document.getElementById('propDisableClosedConversations').checked = false;
+      document.getElementById('propHeight').value = '500px';
       
       // Get current state before reinitializing
       const currentState = ChatComponent.useChatStore.getState().exportState();

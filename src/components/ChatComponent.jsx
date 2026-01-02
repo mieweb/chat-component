@@ -100,7 +100,7 @@ const ChatComponent = ({
       <div 
         role="region"
         aria-label="Chat"
-        className={`chat-component-root tw-flex tw-flex-col tw-overflow-hidden tw-border tw-rounded-lg ${className}`}
+        className={`chat-component-root tw-flex tw-flex-col tw-border tw-rounded-lg ${className}`}
         style={{ 
           height,
           maxWidth,
@@ -121,8 +121,8 @@ const ChatComponent = ({
         </div>
         
         {/* Read-only message thread */}
-        <div className="tw-flex tw-flex-1 tw-overflow-hidden tw-h-full">
-          <div className="tw-flex tw-flex-col tw-flex-1 tw-bg-white tw-m-3.5 tw-rounded-lg tw-shadow-sm tw-overflow-hidden">
+        <div className="tw-flex">
+          <div className="tw-flex tw-flex-col tw-flex-1 tw-bg-white tw-m-3.5 tw-rounded-lg tw-shadow-sm">
             <MessageThread 
               currentUserId={currentUserId} 
               readOnlyConversation={conversation}
