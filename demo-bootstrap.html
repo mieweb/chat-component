@@ -62,6 +62,15 @@
               
               <div class="col-md-6">
                 <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="propHideConversationStatus">
+                  <label class="form-check-label" for="propHideConversationStatus">
+                    <strong>hideConversationStatus</strong> - Hide the Open/Closed status badge
+                  </label>
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-check form-switch">
                   <input class="form-check-input" type="checkbox" id="propHideNewButton">
                   <label class="form-check-label" for="propHideNewButton">
                     <strong>hideNewButton</strong> - Hide the New Conversation button
@@ -110,6 +119,19 @@
                   <strong>height</strong> - Component height (e.g., "500px", "auto")
                 </label>
                 <input type="text" class="form-control" id="propHeight" value="500px">
+              </div>
+
+              <div class="col-md-6">
+                <label for="propNewConversationLabel" class="form-label">
+                  <strong>newConversationLabel</strong> - Label for the New Conversation button (empty = "+")
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="propNewConversationLabel"
+                  value=""
+                  placeholder="Example: New"
+                >
               </div>
             </div>
             
@@ -408,12 +430,14 @@
       const props = {
         showCloseButton: document.getElementById('propShowCloseButton').checked,
         hideStatusToggle: document.getElementById('propHideStatusToggle').checked,
+        hideConversationStatus: document.getElementById('propHideConversationStatus').checked,
         hideNewButton: document.getElementById('propHideNewButton').checked,
         hideToggleButton: document.getElementById('propHideToggleButton').checked,
         hideDeliveryMethod: document.getElementById('propHideDeliveryMethod').checked,
         readOnly: isReadOnly,
         disableClosedConversations: document.getElementById('propDisableClosedConversations').checked,
-        height: heightValue
+        height: heightValue,
+        newConversationLabel: document.getElementById('propNewConversationLabel').value
       };
       
       // If readonly mode is enabled, inject the active conversation
@@ -451,12 +475,14 @@
       // Uncheck all checkboxes
       document.getElementById('propShowCloseButton').checked = false;
       document.getElementById('propHideStatusToggle').checked = false;
+      document.getElementById('propHideConversationStatus').checked = false;
       document.getElementById('propHideNewButton').checked = false;
       document.getElementById('propHideToggleButton').checked = false;
       document.getElementById('propHideDeliveryMethod').checked = false;
       document.getElementById('propReadOnly').checked = false;
       document.getElementById('propDisableClosedConversations').checked = false;
       document.getElementById('propHeight').value = '500px';
+      document.getElementById('propNewConversationLabel').value = '';
       
       // Get current state before reinitializing
       const currentState = ChatComponent.useChatStore.getState().exportState();

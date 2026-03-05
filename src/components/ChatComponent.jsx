@@ -20,8 +20,10 @@ const ChatComponent = ({
   readOnly = false, // Enable read-only mode
   conversation = null, // Conversation object for read-only mode
   hideNewButton = false, // Hide the New Conversation button
+  newConversationLabel = '', // Label for the New Conversation button; falls back to '+' when empty
   hideToggleButton = false, // Hide the sidebar toggle button
   hideStatusToggle = false, // Hide the conversation status toggle button
+  hideConversationStatus = false, // Hide the conversation status badge (Open/Closed)
   showCloseButton = false, // Show Close button instead of Toggle Status button
   disableClosedConversations = false, // Disable compose area when conversation status is closed
   hideDeliveryMethod = false, // Hide the delivery method dropdown in compose area
@@ -165,6 +167,7 @@ const ChatComponent = ({
           onConversationOpened={onConversationOpened}
           onNewConversationClick={handleNewConversationClick}
           hideNewButton={hideNewButton}
+          newConversationLabel={newConversationLabel}
           linkBuilder={linkBuilder}
         />
       </aside>
@@ -182,6 +185,7 @@ const ChatComponent = ({
         <TopBar 
           hideToggleButton={hideToggleButton} 
           hideStatusToggle={hideStatusToggle}
+          hideConversationStatus={hideConversationStatus}
           showCloseButton={showCloseButton}
           onConversationClosed={onConversationClosed}
         />

@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import useChatStore, { formatTime } from '../store';
 
-const ConversationList = ({ onConversationOpened = null, onNewConversationClick = null, hideNewButton = false, linkBuilder = null }) => {
+const ConversationList = ({
+  onConversationOpened = null,
+  onNewConversationClick = null,
+  hideNewButton = false,
+  newConversationLabel = '',
+  linkBuilder = null
+}) => {
   const conversations = useChatStore(state => state.conversations);
   const activeConversationId = useChatStore(state => state.activeConversationId);
   const setActiveConversation = useChatStore(state => state.setActiveConversation);
@@ -34,6 +40,8 @@ const ConversationList = ({ onConversationOpened = null, onNewConversationClick 
       return a.lastActivity < b.lastActivity ? 1 : -1;
     });
 
+  const hasCustomNewConversationLabel = typeof newConversationLabel === 'string' && newConversationLabel !== '';
+
   return (
     <div className="tw-flex tw-flex-col tw-h-full">
       <div 
@@ -44,12 +52,14 @@ const ConversationList = ({ onConversationOpened = null, onNewConversationClick 
         {!hideNewButton && (
           <button
             type="button"
-            className="tw-w-8 tw-h-8 tw-rounded-lg tw-border-none tw-text-white tw-cursor-pointer tw-text-xl tw-flex tw-items-center tw-justify-center"
+            className={`tw-h-8 tw-rounded-lg tw-border-none tw-text-white tw-cursor-pointer tw-flex tw-items-center tw-justify-center ${
+              hasCustomNewConversationLabel ? 'tw-px-3 tw-text-sm tw-font-semibold' : 'tw-w-8 tw-text-xl'
+            }`}
             style={{ background: 'var(--chat-primary)' }}
             onClick={onNewConversationClick}
             aria-label="Create new conversation"
           >
-            +
+            {hasCustomNewConversationLabel ? newConversationLabel : '+'}
           </button>
         )}
       </div>

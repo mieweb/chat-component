@@ -213,8 +213,10 @@ function CustomLinksExample() {
 | `onConversationCreated` | `Function` | `null` | Callback when a new conversation is created. Receives `{ conversationId, conversation }` |
 | `onConversationClosed` | `Function` | `null` | Callback when the Close button is clicked. Receives `{ conversationId, conversation }` |
 | `hideNewButton` | `boolean` | `false` | Hide the "New Conversation" button in the conversation list |
+| `newConversationLabel` | `string` | `''` | Label text for the New Conversation button. When empty, the button shows `+` |
 | `hideToggleButton` | `boolean` | `false` | Hide the sidebar toggle button in the top bar |
 | `hideStatusToggle` | `boolean` | `false` | Hide the conversation status toggle button in the top bar |
+| `hideConversationStatus` | `boolean` | `false` | Hide the conversation status badge (Open/Closed label) in the top bar |
 | `showCloseButton` | `boolean` | `false` | Show a Close button instead of the Toggle Status button in the top bar |
 | `disableClosedConversations` | `boolean` | `false` | When `true`, disables the compose area when a conversation's status is 'closed' |
 | `hideDeliveryMethod` | `boolean` | `false` | Hide the delivery method dropdown in the compose area (useful for patient/external user views) |

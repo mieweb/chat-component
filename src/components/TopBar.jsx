@@ -4,6 +4,7 @@ import useChatStore from '../store';
 const TopBar = ({ 
   hideToggleButton = false, 
   hideStatusToggle = false,
+  hideConversationStatus = false,
   showCloseButton = false,
   onConversationClosed = null
 }) => {
@@ -73,18 +74,20 @@ const TopBar = ({
       </div>
       
       <div className="tw-flex tw-gap-2 tw-items-center tw-flex-shrink-0">
-        <span 
-          className={`tw-text-[11px] tw-leading-4 tw-px-1.5 tw-py-0.5 tw-rounded-full ${
-            isOpen
-              ? 'tw-text-[var(--chat-open-text)]' 
-              : 'tw-text-[var(--chat-closed-text)]'
-          }`}
-          style={{
-            background: isOpen ? 'var(--chat-open-bg)' : 'var(--chat-closed-bg)'
-          }}
-        >
-          {isOpen ? 'Open' : 'Closed'}
-        </span>
+        {!hideConversationStatus && (
+          <span 
+            className={`tw-text-[11px] tw-leading-4 tw-px-1.5 tw-py-0.5 tw-rounded-full ${
+              isOpen
+                ? 'tw-text-[var(--chat-open-text)]' 
+                : 'tw-text-[var(--chat-closed-text)]'
+            }`}
+            style={{
+              background: isOpen ? 'var(--chat-open-bg)' : 'var(--chat-closed-bg)'
+            }}
+          >
+            {isOpen ? 'Open' : 'Closed'}
+          </span>
+        )}
 
         {!hideStatusToggle && (
           <button

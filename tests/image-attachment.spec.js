@@ -24,7 +24,8 @@ test.describe('Image Attachment Feature', () => {
   test('attach button is visible in compose area', async ({ page }) => {
     const attachButton = page.getByRole('button', { name: 'Attach image' });
     await expect(attachButton).toBeVisible();
-    await expect(attachButton).toHaveText('📎');
+    // Button now has an SVG icon instead of emoji text
+    await expect(attachButton.locator('svg')).toBeVisible();
   });
 
   test('attach button opens file picker', async ({ page }) => {

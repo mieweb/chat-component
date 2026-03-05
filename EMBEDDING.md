@@ -406,6 +406,7 @@ console.log(currentState);
 | `onMessageSent` | `function` | `undefined` | Callback when user sends a message. Receives `{ text, channel, conversationId, timestamp }` |
 | `onConversationClosed` | `function` | `undefined` | Callback when Close button is clicked. Receives `{ conversationId, conversation }` |
 | `showCloseButton` | `boolean` | `false` | Show Close button instead of Toggle Status button |
+| `newConversationLabel` | `string` | `''` | Label text for the New Conversation button. When empty, the button shows `+` |
 | `hideStatusToggle` | `boolean` | `false` | Hide the conversation status toggle button |
 | `hideToggleButton` | `boolean` | `false` | Hide the sidebar toggle button |
 | `hideNewButton` | `boolean` | `false` | Hide the New Conversation button |
