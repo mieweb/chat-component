@@ -13,7 +13,7 @@ const MessageItem = ({ item, currentUserId, linkBuilder }) => {
       return (
         <div className="tw-mb-5 tw-flex tw-flex-col tw-items-center">
           <div 
-            className="tw-bg-[#fff9c4] tw-border tw-border-[#fff59d] tw-rounded-xl tw-px-4 tw-py-2.5 tw-max-w-[85%] tw-text-[15px] tw-shadow-sm tw-text-center"
+            className="tw-bg-[#fff9c4] tw-border tw-border-[#fff59d] tw-rounded-xl tw-px-4 tw-py-2.5 tw-max-w-[85%] max-[480px]:tw-max-w-[96%] tw-text-[15px] tw-shadow-sm tw-text-center"
           >
             <div className="tw-text-[#666]">
               <span dangerouslySetInnerHTML={{ __html: item.text.replace(/\n/g, '<br>') }} />
@@ -39,7 +39,7 @@ const MessageItem = ({ item, currentUserId, linkBuilder }) => {
         data-alignment={isCurrentUser ? 'right' : 'left'}
         className={`tw-mb-5 tw-flex tw-flex-col ${
           isCurrentUser ? 'tw-items-end' : 'tw-items-start'
-        }`}
+        } tw-min-w-0`}
       >
         {item.sender_name && (
           <div className="tw-text-xs tw-text-[#666] tw-mb-1 tw-font-medium">
@@ -69,9 +69,9 @@ const MessageItem = ({ item, currentUserId, linkBuilder }) => {
         {/* Text bubble */}
         {hasText && (
           <p 
-            className={`tw-max-w-[75%] tw-px-3.5 tw-py-2.5 tw-rounded-2xl tw-text-[15px] ${
+            className={`tw-max-w-[75%] max-[480px]:tw-max-w-[92%] tw-px-3.5 tw-py-2.5 tw-rounded-2xl tw-text-[15px] ${
               isCurrentUser ? 'tw-bg-[#c8e6c9]' : 'tw-bg-[#e3f2fd]'
-            } tw-text-[#222]`}
+            } tw-text-[#222] tw-whitespace-pre-wrap tw-break-words`}
           >
             <span className="tw-text-sm tw-align-middle">{channelIcon(item.channel)}</span> 
             <span dangerouslySetInnerHTML={{ __html: item.text.replace(/\n/g, '<br>') }} />
@@ -108,25 +108,25 @@ const MessageItem = ({ item, currentUserId, linkBuilder }) => {
     return (
       <div className="tw-mb-5 tw-flex tw-flex-col tw-items-center">
         <div 
-          className="tw-bg-[#f9fbe7] tw-border tw-border-l-[5px] tw-rounded-xl tw-px-4 tw-py-3 tw-max-w-[85%] tw-text-[15px] tw-shadow-sm tw-flex tw-flex-col tw-gap-1"
+          className="tw-bg-[#f9fbe7] tw-border tw-border-l-[5px] tw-rounded-xl tw-px-4 tw-py-3 tw-max-w-[85%] max-[480px]:tw-max-w-[96%] tw-text-[15px] tw-shadow-sm tw-flex tw-flex-col tw-gap-1 tw-min-w-0"
           style={{ borderColor: '#e6ee9c', borderLeftColor: config.borderColor }}
         >
-          <div className="tw-font-bold tw-text-[#333] tw-flex tw-items-center tw-gap-2">
+          <div className="tw-font-bold tw-text-[#333] tw-flex tw-items-center tw-gap-2 tw-flex-wrap tw-min-w-0">
             <span className="tw-text-sm">{config.icon}</span>
             {item.title && (
-              <span>{item.title}</span>
+              <span className="tw-break-words">{item.title}</span>
             )}
             {linkHref && (
               <a 
                 href={linkHref}
-                className="tw-text-xs tw-underline"
+                className="tw-text-xs tw-underline tw-break-all"
                 style={{ color: 'var(--chat-primary)' }}
               >
                 {config.label}
               </a>
             )}
           </div>
-          <div className="tw-text-[#444]">
+          <div className="tw-text-[#444] tw-break-words">
             <span dangerouslySetInnerHTML={{ __html: item.text.replace(/\n/g, '<br>') }} />
           </div>
           <div className="tw-text-xs tw-text-[#888] tw-mt-0.5 tw-flex tw-items-center tw-gap-1.5">
@@ -169,7 +169,7 @@ const MessageThread = ({ currentUserId = null, readOnlyConversation = null, link
   return (
     <div 
       ref={threadRef}
-      className="tw-flex-1 tw-p-4 tw-overflow-y-auto"
+      className="tw-flex-1 tw-p-4 max-[480px]:tw-p-2.5 tw-overflow-y-auto tw-overflow-x-hidden tw-min-w-0"
     >
       {sortedThread.map((item, index) => (
         <MessageItem key={index} item={item} currentUserId={currentUserId} linkBuilder={linkBuilder} />

@@ -6,7 +6,9 @@ const TopBar = ({
   hideStatusToggle = false,
   hideConversationStatus = false,
   showCloseButton = false,
-  onConversationClosed = null
+  onConversationClosed = null,
+  isCompactLayout = false,
+  hideStatusForWidth = false
 }) => {
   const activeConversation = useChatStore(state => state.getActiveConversation());
   const toggleConversationStatus = useChatStore(state => state.toggleConversationStatus);
@@ -52,10 +54,10 @@ const TopBar = ({
       style={{ borderColor: 'var(--chat-border)' }}
     >
       <div className="tw-flex tw-items-center tw-gap-2 tw-min-w-0">
-        {!hideToggleButton && !sidebarOpen && (
+        {!hideToggleButton && !sidebarOpen && isCompactLayout && (
           <button
             type="button"
-            className="tw-w-8 tw-h-8 tw-rounded-md tw-border tw-bg-white tw-cursor-pointer tw-flex tw-items-center tw-justify-center hover:tw-bg-gray-100 tw-transition-colors min-[900px]:tw-hidden"
+            className="tw-w-8 tw-h-8 tw-rounded-md tw-border tw-bg-white tw-cursor-pointer tw-flex tw-items-center tw-justify-center hover:tw-bg-gray-100 tw-transition-colors"
             onClick={toggleSidebar}
             aria-label="Toggle conversations"
             title="Toggle conversations"
@@ -74,7 +76,7 @@ const TopBar = ({
       </div>
       
       <div className="tw-flex tw-gap-2 tw-items-center tw-flex-shrink-0">
-        {!hideConversationStatus && (
+        {!hideConversationStatus && !hideStatusForWidth && (
           <span 
             className={`tw-text-[11px] tw-leading-4 tw-px-1.5 tw-py-0.5 tw-rounded-full ${
               isOpen

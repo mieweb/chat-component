@@ -4,9 +4,20 @@ This guide explains how to embed the chat component into your HTML page and inte
 
 ## Quick Start
 
-### 1. Include the Component Bundle
+## Troubleshooting Deployed vs Demo Differences
 
-Add a single script tag to your HTML page. All dependencies (React, ReactDOM, Zustand) are bundled together:
+If behavior differs between your deployed environment and `demo-bootstrap.html`, verify these first:
+
+1. `chat-component.css` is loaded on the page before rendering the component.
+2. The page includes `<meta name="viewport" content="width=device-width, initial-scale=1.0">`.
+3. You are loading the same package version for both CSS and UMD script.
+4. Browser cache/CDN cache is cleared after deployment.
+
+When CSS is missing or stale, symptoms often include stacked layout, clipped text, missing spacing, and inconsistent mobile behavior.
+
+### 1. Include Component CSS and UMD Bundle
+
+Add both the stylesheet and script tag to your HTML page. The UMD bundle includes React, ReactDOM, and Zustand, but CSS must be loaded separately:
 
 ```html
 <!DOCTYPE html>
@@ -15,13 +26,14 @@ Add a single script tag to your HTML page. All dependencies (React, ReactDOM, Zu
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My App with Chat Component</title>
+  <link rel="stylesheet" href="https://unpkg.com/@mieweb/chat-component/dist/chat-component.css">
 </head>
 <body>
   <!-- Your existing page content -->
   <div id="chat-container"></div>
 
   <!-- Single bundle with all dependencies included -->
-  <script src="https://unpkg.com/@mieweb/chat-component/dist/chat-component.bundle.js"></script>
+  <script src="https://unpkg.com/@mieweb/chat-component/dist/chat-component.umd.js"></script>
   
   <script>
     // Initialize the chat component (see below)
@@ -30,15 +42,18 @@ Add a single script tag to your HTML page. All dependencies (React, ReactDOM, Zu
 </html>
 ```
 
-> **Note:** The bundle includes React, ReactDOM, and Zustand. You don't need to manage any dependencies separately.
+> **Important:** If you skip `chat-component.css`, layout classes (prefixed with `tw-`) will not render correctly and the component can appear stacked or clipped.
+
+> **Note:** The UMD bundle includes React, ReactDOM, and Zustand. You don't need to manage any dependencies separately.
 
 ### Self-Hosting Option
 
 If you prefer to self-host the bundle:
 
 ```html
-<!-- Download the bundle and host it on your server -->
-<script src="/path/to/your/chat-component.bundle.js"></script>
+<!-- Download assets from dist/ and host them on your server -->
+<link rel="stylesheet" href="/path/to/your/chat-component.css">
+<script src="/path/to/your/chat-component.umd.js"></script>
 ```
 
 You can download the bundle from the npm package or build it yourself (see [Building](#building-the-bundle) below).

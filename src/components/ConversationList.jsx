@@ -129,8 +129,8 @@ const ConversationList = ({
                 <div className="tw-w-2 tw-h-2 tw-flex-shrink-0" />
               )}
 
-              <div className="tw-flex-1">
-                <div className="tw-font-semibold">{conversation.title}</div>
+              <div className="tw-flex-1 tw-min-w-0">
+                <div className="tw-font-semibold tw-break-words">{conversation.title}</div>
                 <div className="tw-text-xs tw-text-[var(--chat-muted)] tw-flex tw-gap-2 tw-flex-wrap">
                   <span>{formatTime(conversation.lastActivity)}</span>
                   <span 

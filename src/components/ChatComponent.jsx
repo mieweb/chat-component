@@ -32,6 +32,8 @@ const ChatComponent = ({
 }) => {
   const [showNewDialog, setShowNewDialog] = React.useState(false);
   const [newConvTitle, setNewConvTitle] = React.useState('');
+  const [componentWidth, setComponentWidth] = React.useState(0);
+  const rootRef = React.useRef(null);
   
   const sidebarOpen = useChatStore(state => state.sidebarOpen);
   const setSidebarOpen = useChatStore(state => state.setSidebarOpen);
@@ -39,6 +41,36 @@ const ChatComponent = ({
   const createConversation = useChatStore(state => state.createConversation);
   const setActiveConversation = useChatStore(state => state.setActiveConversation);
   const activeConversation = useChatStore(state => state.getActiveConversation());
+  const compactBreakpoint = 900;
+  const narrowStatusBreakpoint = 420;
+  const isCompactLayout = componentWidth > 0 && componentWidth < compactBreakpoint;
+  const hideStatusForWidth = componentWidth > 0 && componentWidth < narrowStatusBreakpoint;
+
+  React.useEffect(() => {
+    if (!rootRef.current || typeof ResizeObserver === 'undefined') {
+      return undefined;
+    }
+
+    const observer = new ResizeObserver(([entry]) => {
+      if (!entry) {
+        return;
+      }
+
+      setComponentWidth(Math.round(entry.contentRect.width));
+    });
+
+    observer.observe(rootRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  React.useEffect(() => {
+    if (!isCompactLayout && sidebarOpen) {
+      setSidebarOpen(false);
+    }
+  }, [isCompactLayout, setSidebarOpen, sidebarOpen]);
 
   // Load initial data if provided
   React.useEffect(() => {
@@ -100,11 +132,13 @@ const ChatComponent = ({
   if (readOnly && conversation) {
     return (
       <div 
+        ref={rootRef}
         role="region"
         aria-label="Chat"
         className={`chat-component-root tw-flex tw-flex-col tw-border tw-rounded-lg ${className}`}
         style={{ 
           height,
+          width: '100%',
           maxWidth,
           background: 'var(--chat-bg)',
           borderColor: 'var(--chat-border)',
@@ -123,8 +157,8 @@ const ChatComponent = ({
         </div>
         
         {/* Read-only message thread */}
-        <div className="tw-flex">
-          <div className="tw-flex tw-flex-col tw-flex-1 tw-bg-white tw-m-3.5 tw-rounded-lg tw-shadow-sm">
+        <div className="tw-flex tw-min-w-0">
+          <div className={`tw-flex tw-flex-col tw-flex-1 tw-bg-white tw-rounded-lg tw-shadow-sm tw-min-w-0 ${isCompactLayout ? 'tw-m-2' : 'tw-m-3.5'}`}>
             <MessageThread 
               currentUserId={currentUserId} 
               readOnlyConversation={conversation}
@@ -138,11 +172,13 @@ const ChatComponent = ({
 
   return (
     <div 
+      ref={rootRef}
       role="region"
       aria-label="Chat"
       className={`chat-component-root tw-flex tw-relative tw-overflow-hidden tw-border tw-rounded-lg ${className}`}
       style={{ 
         height,
+        width: '100%',
         maxWidth,
         background: 'var(--chat-bg)',
         borderColor: 'var(--chat-border)',
@@ -152,15 +188,18 @@ const ChatComponent = ({
     >
       {/* Sidebar */}
       <aside 
-        className={`tw-flex tw-flex-col tw-bg-white tw-border-r tw-transition-transform tw-duration-300 tw-ease-in-out ${
-          sidebarOpen 
-            ? 'tw-translate-x-0 tw-absolute tw-top-0 tw-bottom-0 tw-left-0 tw-z-[1001] tw-shadow-2xl' 
-            : 'tw-w-[300px] tw-translate-x-0 max-[900px]:tw-absolute max-[900px]:tw--translate-x-full max-[900px]:tw-top-0 max-[900px]:tw-bottom-0 max-[900px]:tw-left-0 max-[900px]:tw-z-[1001]'
+        className={`tw-flex tw-flex-col tw-bg-white tw-border-r tw-transition-transform tw-duration-300 tw-ease-in-out tw-min-w-0 ${
+          isCompactLayout
+            ? sidebarOpen
+              ? 'tw-translate-x-0 tw-absolute tw-top-0 tw-bottom-0 tw-left-0 tw-z-[1001] tw-shadow-2xl'
+              : 'tw-absolute tw-top-0 tw-bottom-0 tw-left-0 tw-z-[1001] tw--translate-x-full'
+            : 'tw-relative tw-translate-x-0 tw-shadow-none'
         }`}
         style={{ 
           borderColor: 'var(--chat-border)',
-          maxWidth: sidebarOpen ? '360px' : '300px',
-          width: sidebarOpen ? '84vw' : '300px'
+          maxWidth: isCompactLayout ? 'min(84%, 320px)' : '300px',
+          width: isCompactLayout ? 'min(84%, 320px)' : '300px',
+          flexShrink: 0
         }}
       >
         <ConversationList 
@@ -175,23 +214,25 @@ const ChatComponent = ({
       {/* Backdrop for mobile */}
       <div 
         className={`tw-absolute tw-inset-0 tw-bg-black tw-bg-opacity-40 tw-transition-opacity tw-duration-200 tw-z-[1000] ${
-          sidebarOpen ? 'tw-opacity-100 tw-pointer-events-auto' : 'tw-opacity-0 tw-pointer-events-none'
+          isCompactLayout && sidebarOpen ? 'tw-opacity-100 tw-pointer-events-auto' : 'tw-opacity-0 tw-pointer-events-none'
         }`}
         onClick={handleBackdropClick}
       />
 
       {/* Main content */}
-      <main className="tw-flex tw-flex-col tw-flex-1 tw-h-full">
+      <main className="tw-flex tw-flex-col tw-flex-1 tw-h-full tw-min-w-0">
         <TopBar 
           hideToggleButton={hideToggleButton} 
           hideStatusToggle={hideStatusToggle}
           hideConversationStatus={hideConversationStatus}
           showCloseButton={showCloseButton}
           onConversationClosed={onConversationClosed}
+          isCompactLayout={isCompactLayout}
+          hideStatusForWidth={hideStatusForWidth}
         />
         
-        <div className="tw-flex tw-flex-1 tw-overflow-hidden tw-h-full">
-          <div className="tw-flex tw-flex-col tw-flex-1 tw-bg-white tw-m-3.5 tw-rounded-lg tw-shadow-sm tw-overflow-hidden">
+        <div className="tw-flex tw-flex-1 tw-overflow-hidden tw-h-full tw-min-w-0">
+          <div className={`tw-flex tw-flex-col tw-flex-1 tw-bg-white tw-rounded-lg tw-shadow-sm tw-overflow-hidden tw-min-w-0 ${isCompactLayout ? 'tw-m-2' : 'tw-m-3.5 max-[480px]:tw-m-2'}`}>
             <MessageThread 
               currentUserId={currentUserId} 
               linkBuilder={linkBuilder}
