@@ -41,7 +41,7 @@ const ChatComponent = ({
   const createConversation = useChatStore(state => state.createConversation);
   const setActiveConversation = useChatStore(state => state.setActiveConversation);
   const activeConversation = useChatStore(state => state.getActiveConversation());
-  const compactBreakpoint = 900;
+  const compactBreakpoint = 720;
   const narrowStatusBreakpoint = 420;
   const isCompactLayout = componentWidth > 0 && componentWidth < compactBreakpoint;
   const hideStatusForWidth = componentWidth > 0 && componentWidth < narrowStatusBreakpoint;
