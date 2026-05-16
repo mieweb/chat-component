@@ -3,6 +3,10 @@ import react from '@vitejs/plugin-react'
 // import basicSsl from '@vitejs/plugin-basic-ssl'
 
 export default defineConfig({
+  define: {
+    'process.env.NODE_ENV': JSON.stringify('production'),
+    process: '{}',
+  },
   plugins: [
     // basicSsl(), // Disabled - let nginx handle SSL
     react({
@@ -16,6 +20,7 @@ export default defineConfig({
     allowedHosts: [
       'localhost',
       'chat-component.opensource.mieweb.org',
+	  'chat-component.os.mieweb.org',
     ],
     cors: {
       origin: '*', // Allow all origins in development
