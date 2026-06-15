@@ -40,6 +40,26 @@ A React chat component with Tailwind CSS styling and Zustand state management, d
 npm install @mieweb/chat-component
 ```
 
+## Trusted Publishing
+
+This repository is set up to publish from [publish.yml](.github/workflows/publish.yml) using npm trusted publishing with GitHub Actions OIDC.
+
+To enable trusted publishing for `@mieweb/chat-component` on npm:
+
+1. In npm package settings, add a GitHub Actions trusted publisher for:
+  - Organization or user: `mieweb`
+  - Repository: `chat-component`
+  - Workflow filename: `publish.yml`
+  - Allowed actions: `npm publish`
+2. Publish by pushing a version tag such as `v1.0.1`.
+3. After the first successful OIDC publish, switch npm package publishing access to require two-factor authentication and disallow tokens, then revoke any old automation tokens.
+
+Notes:
+
+- The workflow must stay at `.github/workflows/publish.yml`, and the filename must exactly match what you configure on npm.
+- Provenance is generated automatically when publishing with trusted publishing from a public GitHub repository to a public npm package.
+- If you later add a GitHub environment to the publish job, the same environment name must also be configured in the npm trusted publisher settings.
+
 ## Quick Start
 
 ### React Application
