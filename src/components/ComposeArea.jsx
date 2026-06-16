@@ -7,7 +7,8 @@ const ComposeArea = ({
   activeConversation, 
   disableClosedConversations = false,
   hideDeliveryMethod = false,
-  onConversationCreated = null 
+  onConversationCreated = null,
+  disableAutoCreateConversation = false // When true, sending a message won't auto-create a conversation
 }) => {
   const [text, setText] = useState('');
   const [sendType, setSendType] = useState('auto');
@@ -144,6 +145,7 @@ const ComposeArea = ({
     let newlyCreatedConversation = false;
     
     if (!activeConversation && conversations.length === 0) {
+      if (disableAutoCreateConversation) return;
       const newConversation = createConversation('New Conversation');
       conversationToUse = newConversation;
       newlyCreatedConversation = true;
@@ -243,7 +245,7 @@ const ComposeArea = ({
 
       <textarea
         ref={textareaRef}
-        className={`tw-w-full tw-max-h-[320px] tw-resize-none tw-border tw-rounded-lg tw-px-3 tw-py-2 tw-text-sm tw-leading-[1.4] tw-outline-none tw-overflow-y-auto ${
+        className={`chat-compose-textarea tw-w-full tw-max-h-[320px] tw-resize-none tw-border tw-rounded-lg tw-px-3 tw-py-2 tw-text-sm tw-leading-[1.4] tw-outline-none tw-overflow-y-auto ${
           isClosed 
             ? 'tw-bg-gray-100 tw-cursor-not-allowed tw-text-gray-500' 
             : 'focus:tw-border-[var(--chat-primary)] focus:tw-shadow-[0_0_0_2px_rgba(25,118,210,0.13)]'

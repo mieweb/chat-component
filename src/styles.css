@@ -69,6 +69,28 @@
   background-color: transparent !important;
 }
 
+/* Harden the compose textarea border against host environment CSS overrides.
+   Some host apps reset or remove borders on inputs/textareas globally; this
+   ensures the message area remains visually distinct at all times. */
+.chat-component-root .chat-compose-textarea {
+  border-width: 1px !important;
+  border-style: solid !important;
+  border-color: var(--chat-border) !important;
+  background-color: #ffffff !important;
+}
+
+.chat-component-root .chat-compose-textarea:focus {
+  border-color: var(--chat-primary) !important;
+  box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.13) !important;
+  outline: none !important;
+}
+
+.chat-component-root .chat-compose-textarea:disabled {
+  background-color: #f3f4f6 !important;
+  border-color: var(--chat-border) !important;
+  cursor: not-allowed !important;
+}
+
 /* Reset list styles */
 .chat-component-root ul,
 .chat-component-root ol {

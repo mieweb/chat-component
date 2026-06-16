@@ -28,7 +28,8 @@ const ChatComponent = ({
   disableClosedConversations = false, // Disable compose area when conversation status is closed
   hideDeliveryMethod = false, // Hide the delivery method dropdown in compose area
   linkBuilder = null, // Function to build custom links: (refType, refId, item) => string
-  onNewConversation = null // Custom handler for New Conversation button: receives { openDialog, createConversation } helpers
+  onNewConversation = null, // Custom handler for New Conversation button: receives { openDialog, createConversation } helpers
+  disableAutoCreateConversation = false // Prevent the compose area from auto-creating a new conversation; only the New Chat button can create chats
 }) => {
   const [showNewDialog, setShowNewDialog] = React.useState(false);
   const [newConvTitle, setNewConvTitle] = React.useState('');
@@ -244,6 +245,7 @@ const ChatComponent = ({
               disableClosedConversations={disableClosedConversations}
               hideDeliveryMethod={hideDeliveryMethod}
               onConversationCreated={onConversationCreated}
+              disableAutoCreateConversation={disableAutoCreateConversation}
             />
           </div>
         </div>
