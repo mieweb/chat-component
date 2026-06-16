@@ -137,6 +137,17 @@ const ComposeArea = ({
     e.target.value = '';
   };
 
+  const emitSendError = (code, message, meta = {}) => {
+    if (!onMessageSent) return;
+    onMessageSent({
+      error: {
+        code,
+        message,
+        ...meta,
+      },
+    });
+  };
+
   const handleSend = () => {
     if ((!text.trim() && images.length === 0) || isClosed ) return;
 
@@ -145,14 +156,27 @@ const ComposeArea = ({
     let newlyCreatedConversation = false;
     
     if (!activeConversation && conversations.length === 0) {
-      if (disableAutoCreateConversation) return;
+      if (disableAutoCreateConversation) {
+        emitSendError(
+          'AUTO_CREATE_DISABLED',
+          'No active conversation. Create a new chat before sending a message.',
+          { requiresConversationCreation: true }
+        );
+        return;
+      }
       const newConversation = createConversation('New Conversation');
       conversationToUse = newConversation;
       newlyCreatedConversation = true;
     }
 
     // If still no conversation (edge case), return
-    if (!conversationToUse) return;
+    if (!conversationToUse) {
+      emitSendError(
+        'NO_ACTIVE_CONVERSATION',
+        'No active conversation is selected for this message.'
+      );
+      return;
+    }
 
     const message = {
       text: text.trim(),
