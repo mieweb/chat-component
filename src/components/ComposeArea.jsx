@@ -23,6 +23,8 @@ const ComposeArea = ({
 
   // Fix: Use 'open' property instead of 'status', and add null check
   const isClosed = disableClosedConversations && activeConversation && !activeConversation.open;
+  const requiresActiveConversation = disableAutoCreateConversation && !activeConversation;
+  const isComposeDisabled = isClosed || requiresActiveConversation;
 
   // Auto-grow textarea
   useEffect(() => {
@@ -149,7 +151,16 @@ const ComposeArea = ({
   };
 
   const handleSend = () => {
-    if ((!text.trim() && images.length === 0) || isClosed ) return;
+    if ((!text.trim() && images.length === 0) || isComposeDisabled) {
+      if (requiresActiveConversation) {
+        emitSendError(
+          'AUTO_CREATE_DISABLED',
+          'No active conversation. Create a new chat before sending a message.',
+          { requiresConversationCreation: true }
+        );
+      }
+      return;
+    }
 
     // If no conversations exist, create a new one
     let conversationToUse = activeConversation;
@@ -215,13 +226,13 @@ const ComposeArea = ({
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      if (!isClosed) {
+      if (!isComposeDisabled) {
         handleSend();
       }
     }
   };
 
-  const canSend = (text.trim() || images.length > 0) && !isClosed;
+  const canSend = (text.trim() || images.length > 0) && !isComposeDisabled;
 
   return (
     <div 
@@ -270,19 +281,25 @@ const ComposeArea = ({
       <textarea
         ref={textareaRef}
         className={`chat-compose-textarea tw-w-full tw-max-h-[320px] tw-resize-none tw-border tw-rounded-lg tw-px-3 tw-py-2 tw-text-sm tw-leading-[1.4] tw-outline-none tw-overflow-y-auto ${
-          isClosed 
+          isComposeDisabled
             ? 'tw-bg-gray-100 tw-cursor-not-allowed tw-text-gray-500' 
             : 'focus:tw-border-[var(--chat-primary)] focus:tw-shadow-[0_0_0_2px_rgba(25,118,210,0.13)]'
         }`}
         style={{ borderColor: 'var(--chat-border)' }}
-        placeholder={isClosed ? "Conversation closed" : "Type a message..."}
+        placeholder={
+          isClosed
+            ? 'Conversation closed'
+            : requiresActiveConversation
+            ? 'Create a new chat to send a message'
+            : 'Type a message...'
+        }
         value={text}
         onChange={(e) => setText(e.target.value)}
         onKeyDown={handleKeyDown}
         onPaste={handlePaste}
         rows={1}
         aria-label="Message text"
-        disabled={isClosed}
+        disabled={isComposeDisabled}
       />
       
       <div className="tw-flex tw-items-center tw-gap-2 tw-flex-wrap">
